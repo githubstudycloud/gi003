@@ -1,0 +1,16 @@
+# 分类预测统计报表系统依赖
+
+# Web框架
+flask==3.0.0
+flask-cors==4.0.0
+
+# 数据处理
+numpy==1.26.2
+pandas==2.1.4
+
+# Excel导出
+openpyxl==3.1.2
+
+# 开发工具
+pytest==7.4.3
+pytest-cov==4.1.0

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>混淆矩阵统计报表 - 演示原型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* 筛选区域 */
+        .filter-section {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .filter-item select,
+        .filter-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #409EFF;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #66b1ff;
+        }
+
+        .btn-success {
+            background: #67C23A;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #85ce61;
+        }
+
+        .btn-info {
+            background: #909399;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #a6a9ad;
+        }
+
+        /* 统计信息 */
+        .stats-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-card.green {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .stat-card.orange {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* 混淆矩阵表格 */
+        .matrix-wrapper {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .matrix-table th,
+        .matrix-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .matrix-table th {
+            background: #409EFF;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .matrix-table th.row-header {
+            background: #67C23A;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        .matrix-table td.row-label {
+            background: #f0f9ff;
+            font-weight: 600;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        /* 对角线(预测正确) - 绿色 */
+        .cell-correct {
+            background: #d4edda !important;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        /* 非对角线(预测错误) - 橙色 */
+        .cell-error {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* 空值 */
+        .cell-zero {
+            background: #f8f9fa;
+            color: #aaa;
+        }
+
+        /* 统计列 */
+        .sum-column {
+            background: #e7f3ff !important;
+            font-weight: bold;
+        }
+
+        .recall-column {
+            background: #e8f5e9 !important;
+            font-weight: bold;
+        }
+
+        .recall-high {
+            color: #2e7d32;
+        }
+
+        .recall-medium {
+            color: #f57c00;
+        }
+
+        .recall-low {
+            color: #c62828;
+        }
+
+        /* 统计行 */
+        .sum-row td {
+            background: #e7f3ff !important;
+            font-weight: bold;
+        }
+
+        .precision-row td {
+            background: #e8f5e9 !important;
+            font-weight: bold;
+        }
+
+        /* 可点击单元格 */
+        .cell-clickable {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cell-clickable:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 1000px;
+            border-radius: 8px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #333;
+        }
+
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .detail-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .badge-pass {
+            background: #67C23A;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .badge-fail {
+            background: #F56C6C;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 分类预测混淆矩阵统计报表</h1>
+
+        <!-- 筛选区域 -->
+        <div class="filter-section">
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label>一级分类</label>
+                    <select id="primaryCategory">
+                        <option value="">全部</option>
+                        <option value="服装" selected>服装</option>
+                        <option value="电子">电子</option>
+                        <option value="食品">食品</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>二级分类</label>
+                    <select id="secondaryCategory">
+                        <option value="">全部</option>
+                        <option value="上衣" selected>上衣</option>
+                        <option value="裤子">裤子</option>
+                        <option value="鞋子">鞋子</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>测试用例</label>
+                    <select id="testCase">
+                        <option value="">全部</option>
+                        <option value="1">春季新品测试</option>
+                        <option value="2">促销活动测试</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>应用场景</label>
+                    <select id="scenario">
+                        <option value="">全部</option>
+                        <option value="1">电商推荐</option>
+                        <option value="2">搜索结果</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label>垂类</label>
+                    <select id="verticalCategory">
+                        <option value="">全部</option>
+                        <option value="1">女装</option>
+                        <option value="2">男装</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>因子</label>
+                    <select id="factor">
+                        <option value="">全部</option>
+                        <option value="1">颜色</option>
+                        <option value="2">尺码</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>因子值</label>
+                    <select id="factorValue">
+                        <option value="">全部</option>
+                        <option value="1">红色</option>
+                        <option value="2">蓝色</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn-primary" onclick="loadMatrix()">🔍 查询</button>
+                <button class="btn-success" onclick="exportExcel()">📊 导出Excel</button>
+                <button class="btn-info" onclick="resetFilters()">🔄 重置</button>
+            </div>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-value" id="totalCount">1000</div>
+                <div class="stat-label">总样本数</div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-value" id="correctCount">850</div>
+                <div class="stat-label">预测正确数</div>
+            </div>
+            <div class="stat-card orange">
+                <div class="stat-value" id="accuracy">85.0%</div>
+                <div class="stat-label">总准确率</div>
+            </div>
+        </div>
+
+        <!-- 混淆矩阵表格 -->
+        <div class="matrix-wrapper">
+            <table class="matrix-table" id="matrixTable">
+                <!-- 表格内容由JavaScript生成 -->
+            </table>
+        </div>
+    </div>
+
+    <!-- 详细数据模态框 -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔍 单元格详细数据</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="modalBody">
+                <!-- 详细数据内容 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟数据 - 16x16混淆矩阵
+        function generateMockMatrix() {
+            const matrix = [];
+            for (let i = 0; i < 16; i++) {
+                matrix[i] = [];
+                for (let j = 0; j < 16; j++) {
+                    // 对角线数据较多(预测正确),非对角线数据较少
+                    if (i === j) {
+                        matrix[i][j] = Math.floor(Math.random() * 50) + 30; // 30-80
+                    } else {
+                        matrix[i][j] = Math.floor(Math.random() * 10); // 0-10
+                    }
+                }
+            }
+            return matrix;
+        }
+
+        // 计算召回率
+        function calculateRecall(matrix, row) {
+            let total = 0;
+            let correct = matrix[row][row];
+            for (let j = 0; j < 16; j++) {
+                total += matrix[row][j];
+            }
+            return total > 0 ? (correct / total * 100).toFixed(2) : 0;
+        }
+
+        // 计算精准率
+        function calculatePrecision(matrix, col) {
+            let total = 0;
+            let correct = matrix[col][col];
+            for (let i = 0; i < 16; i++) {
+                total += matrix[i][col];
+            }
+            return total > 0 ? (correct / total * 100).toFixed(2) : 0;
+        }
+
+        // 获取召回率样式类
+        function getRecallClass(rate) {
+            if (rate >= 90) return 'recall-high';
+            if (rate >= 70) return 'recall-medium';
+            return 'recall-low';
+        }
+
+        // 加载混淆矩阵
+        function loadMatrix() {
+            const matrix = generateMockMatrix();
+            const table = document.getElementById('matrixTable');
+            let html = '';
+
+            // 表头第一行
+            html += '<tr>';
+            html += '<th class="row-header">实际 \\ 预测</th>';
+            for (let i = 0; i < 16; i++) {
+                html += `<th>预测为${i}</th>`;
+            }
+            html += '<th>SUM</th>';
+            html += '<th>召回率</th>';
+            html += '</tr>';
+
+            // 数据行
+            let totalCount = 0;
+            let correctCount = 0;
+
+            for (let i = 0; i < 16; i++) {
+                html += '<tr>';
+                html += `<td class="row-label">实际为${i}</td>`;
+
+                let rowSum = 0;
+                for (let j = 0; j < 16; j++) {
+                    const value = matrix[i][j];
+                    rowSum += value;
+                    totalCount += value;
+                    if (i === j) correctCount += value;
+
+                    let cellClass = 'cell-clickable ';
+                    if (value === 0) {
+                        cellClass += 'cell-zero';
+                    } else if (i === j) {
+                        cellClass += 'cell-correct';
+                    } else {
+                        cellClass += 'cell-error';
+                    }
+
+                    html += `<td class="${cellClass}" onclick="showDetail(${i}, ${j}, ${value})">${value}</td>`;
+                }
+
+                const recall = calculateRecall(matrix, i);
+                html += `<td class="sum-column">${rowSum}</td>`;
+                html += `<td class="recall-column ${getRecallClass(recall)}">${recall}%</td>`;
+                html += '</tr>';
+            }
+
+            // SUM行
+            html += '<tr class="sum-row">';
+            html += '<td>SUM</td>';
+            for (let j = 0; j < 16; j++) {
+                let colSum = 0;
+                for (let i = 0; i < 16; i++) {
+                    colSum += matrix[i][j];
+                }
+                html += `<td>${colSum}</td>`;
+            }
+            html += `<td>${totalCount}</td>`;
+            html += '<td></td>';
+            html += '</tr>';
+
+            // 精准率行
+            html += '<tr class="precision-row">';
+            html += '<td>精准率</td>';
+            for (let j = 0; j < 16; j++) {
+                const precision = calculatePrecision(matrix, j);
+                html += `<td class="${getRecallClass(precision)}">${precision}%</td>`;
+            }
+            const accuracy = (correctCount / totalCount * 100).toFixed(2);
+            html += `<td colspan="2">总准确率: ${accuracy}%</td>`;
+            html += '</tr>';
+
+            table.innerHTML = html;
+
+            // 更新统计卡片
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+
+        // 显示详细数据
+        function showDetail(expected, actual, count) {
+            if (count === 0) return;
+
+            const modal = document.getElementById('detailModal');
+            const modalBody = document.getElementById('modalBody');
+
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>实际值:</strong> ${expected}</p>
+                    <p><strong>预测值:</strong> ${actual}</p>
+                    <p><strong>记录数:</strong> ${count}</p>
+                </div>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>一级分类</th>
+                            <th>二级分类</th>
+                            <th>预期值</th>
+                            <th>实际值</th>
+                            <th>状态</th>
+                            <th>用例</th>
+                            <th>场景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // 生成模拟详细数据
+            for (let i = 0; i < Math.min(count, 10); i++) {
+                const status = expected === actual ? 'pass' : 'fail';
+                const badgeClass = status === 'pass' ? 'badge-pass' : 'badge-fail';
+                html += `
+                    <tr>
+                        <td>${1000 + i}</td>
+                        <td>服装</td>
+                        <td>上衣</td>
+                        <td>${expected}</td>
+                        <td>${actual}</td>
+                        <td><span class="${badgeClass}">${status.toUpperCase()}</span></td>
+                        <td>春季新品测试</td>
+                        <td>电商推荐</td>
+                    </tr>
+                `;
+            }
+
+            if (count > 10) {
+                html += `<tr><td colspan="8" style="text-align: center; color: #999;">... 还有 ${count - 10} 条记录</td></tr>`;
+            }
+
+            html += '</tbody></table>';
+            modalBody.innerHTML = html;
+            modal.style.display = 'block';
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // 导出Excel
+        function exportExcel() {
+            alert('导出Excel功能需要调用后端API:\nPOST /api/confusion-matrix/export');
+            // 实际实现:
+            // fetch('/api/confusion-matrix/export', {
+            //     method: 'POST',
+            //     body: JSON.stringify(getFilters()),
+            //     headers: {'Content-Type': 'application/json'}
+            // }).then(res => res.blob()).then(blob => {
+            //     const url = window.URL.createObjectURL(blob);
+            //     const a = document.createElement('a');
+            //     a.href = url;
+            //     a.download = 'confusion_matrix.xlsx';
+            //     a.click();
+            // });
+        }
+
+        // 重置筛选
+        function resetFilters() {
+            document.getElementById('primaryCategory').value = '';
+            document.getElementById('secondaryCategory').value = '';
+            document.getElementById('testCase').value = '';
+            document.getElementById('scenario').value = '';
+            document.getElementById('verticalCategory').value = '';
+            document.getElementById('factor').value = '';
+            document.getElementById('factorValue').value = '';
+            loadMatrix();
+        }
+
+        // 获取筛选条件
+        function getFilters() {
+            return {
+                primaryCategory: document.getElementById('primaryCategory').value,
+                secondaryCategory: document.getElementById('secondaryCategory').value,
+                testCaseId: document.getElementById('testCase').value || null,
+                scenarioId: document.getElementById('scenario').value || null,
+                verticalCategoryId: document.getElementById('verticalCategory').value || null,
+                factorId: document.getElementById('factor').value || null,
+                factorValueId: document.getElementById('factorValue').value || null
+            };
+        }
+
+        // 页面加载时初始化
+        window.onload = function() {
+            loadMatrix();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://code.claude.com/schemas/settings.json",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "description": "任务完成时发送飞书通知",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/absolute/path/to/examples/feishu-report-hook.sh",
+            "timeout": 30000
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "description": "会话结束时发送飞书汇总",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/absolute/path/to/examples/feishu-report-hook.sh",
+            "timeout": 30000
+          }
+        ]
+      }
+    ]
+  }
+}
