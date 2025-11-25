@@ -174,6 +174,7 @@ function buildMatrix(processedData) {
     document.getElementById('correctCount').textContent = correctCount;
     document.getElementById('wrongCount').textContent = totalCount - correctCount;
     document.getElementById('accuracy').textContent = matrixData.accuracy.toFixed(2) + '%';
+    document.getElementById('totalRecall').textContent = matrixData.accuracy.toFixed(2) + '%';
 }
 
 // 渲染矩阵
@@ -248,8 +249,11 @@ function renderMatrix() {
         const precisionClass = getMetricClass(matrixData.precision[j]);
         html += `<td class="${precisionClass}">${matrixData.precision[j].toFixed(2)}%</td>`;
     }
-    html += '<td>-</td>';
-    html += `<td class="${totalRecallClass}">${matrixData.accuracy.toFixed(2)}%</td>`;
+    // 总精准率前移一格,不放最后
+    const totalPrecision = matrixData.accuracy.toFixed(2);
+    html += `<td class="${totalRecallClass}">${totalPrecision}%</td>`;
+    // 最后一格加斜线表示没有数据
+    html += '<td class="diagonal-cell"></td>';
     html += '</tr>';
 
     html += '</tbody>';

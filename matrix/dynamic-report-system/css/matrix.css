@@ -67,6 +67,10 @@
     border-left-color: #E6A23C;
 }
 
+.stat-recall {
+    border-left-color: #9C27B0;
+}
+
 .stat-value {
     font-size: 36px;
     font-weight: bold;
@@ -209,6 +213,25 @@
 .precision-row td {
     background: #e8f5e9 !important;
     font-weight: bold;
+}
+
+/* 斜线单元格 */
+.diagonal-cell {
+    background: #f5f5f5 !important;
+    position: relative;
+    padding: 0 !important;
+}
+
+.diagonal-cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid #999;
+    transform: rotate(-45deg);
+    transform-origin: 0 0;
 }
 
 /* 详细指标网格 */

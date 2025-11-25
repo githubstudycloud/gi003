@@ -285,6 +285,7 @@
         .stat-correct { border-left-color: #67C23A; }
         .stat-wrong { border-left-color: #F56C6C; }
         .stat-accuracy { border-left-color: #E6A23C; }
+        .stat-recall { border-left-color: #9C27B0; }
 
         /* 矩阵表格 */
         .matrix-wrapper {
@@ -410,6 +411,67 @@
         .precision-row td {
             background: #e8f5e9 !important;
             font-weight: bold;
+        }
+
+        /* 斜线单元格 */
+        .diagonal-cell {
+            background: #f5f5f5 !important;
+            position: relative;
+            padding: 0 !important;
+        }
+
+        .diagonal-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-top: 1px solid #999;
+            transform: rotate(-45deg);
+            transform-origin: 0 0;
+        }
+
+        /* 详细指标 */
+        .metrics-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-base);
+            margin-bottom: 24px;
+        }
+
+        .metrics-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-size: 16px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .metric-card {
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .metric-card .metric-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .metric-card .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
         }
 
         /* 模态框 */
@@ -720,8 +782,18 @@
                 </div>
                 <div class="stat-card stat-accuracy">
                     <div class="value" id="accuracy">0%</div>
-                    <div class="label">总准确率</div>
+                    <div class="label">总精准率</div>
                 </div>
+                <div class="stat-card stat-recall">
+                    <div class="value" id="totalRecall">0%</div>
+                    <div class="label">总召回率</div>
+                </div>
+            </div>
+
+            <!-- 详细指标 -->
+            <div class="metrics-section">
+                <h3>📈 详细指标</h3>
+                <div class="metrics-grid" id="metricsGrid"></div>
             </div>
 
             <!-- 混淆矩阵 -->
@@ -1182,8 +1254,8 @@
                 const precisionClass = precision >= 90 ? 'recall-high' : (precision >= 70 ? 'recall-medium' : 'recall-low');
                 html += `<td class="${precisionClass}">${precision}%</td>`;
             }
-            html += `<td></td>`;
             html += `<td class="${totalRecallClass}">${totalPrecision}%</td>`;
+            html += `<td class="diagonal-cell"></td>`;
             html += '</tr>';
 
             html += '</tbody>';
@@ -1211,6 +1283,95 @@
             document.getElementById('correctCount').textContent = correct;
             document.getElementById('wrongCount').textContent = total - correct;
             document.getElementById('accuracy').textContent = accuracy + '%';
+            document.getElementById('totalRecall').textContent = accuracy + '%';
+
+            // 渲染详细指标
+            renderMetrics();
+        }
+
+        // 渲染详细指标
+        function renderMetrics() {
+            const { matrix, matrixSize, labelMap } = matrixData;
+            const grid = document.getElementById('metricsGrid');
+
+            // 计算每个类别的召回率和精准率
+            let maxRecall = { value: 0, index: -1 };
+            let minRecall = { value: 100, index: -1 };
+            let maxPrecision = { value: 0, index: -1 };
+            let minPrecision = { value: 100, index: -1 };
+
+            for (let i = 0; i < matrixSize; i++) {
+                let rowSum = 0;
+                let colSum = 0;
+                for (let j = 0; j < matrixSize; j++) {
+                    rowSum += matrix[i][j];
+                    colSum += matrix[j][i];
+                }
+
+                if (rowSum > 0) {
+                    const recall = (matrix[i][i] / rowSum) * 100;
+                    if (recall > maxRecall.value) {
+                        maxRecall = { value: recall, index: i };
+                    }
+                    if (recall < minRecall.value) {
+                        minRecall = { value: recall, index: i };
+                    }
+                }
+
+                if (colSum > 0) {
+                    const precision = (matrix[i][i] / colSum) * 100;
+                    if (precision > maxPrecision.value) {
+                        maxPrecision = { value: precision, index: i };
+                    }
+                    if (precision < minPrecision.value) {
+                        minPrecision = { value: precision, index: i };
+                    }
+                }
+            }
+
+            let html = '';
+
+            if (maxRecall.index >= 0) {
+                html += `
+                    <div class="metric-card">
+                        <div class="metric-name">最高召回率</div>
+                        <div class="metric-value">${maxRecall.value.toFixed(2)}%</div>
+                        <div class="metric-name">${labelMap[maxRecall.index] || `值${maxRecall.index}`}</div>
+                    </div>
+                `;
+            }
+
+            if (minRecall.index >= 0) {
+                html += `
+                    <div class="metric-card">
+                        <div class="metric-name">最低召回率</div>
+                        <div class="metric-value">${minRecall.value.toFixed(2)}%</div>
+                        <div class="metric-name">${labelMap[minRecall.index] || `值${minRecall.index}`}</div>
+                    </div>
+                `;
+            }
+
+            if (maxPrecision.index >= 0) {
+                html += `
+                    <div class="metric-card">
+                        <div class="metric-name">最高精准率</div>
+                        <div class="metric-value">${maxPrecision.value.toFixed(2)}%</div>
+                        <div class="metric-name">${labelMap[maxPrecision.index] || `值${maxPrecision.index}`}</div>
+                    </div>
+                `;
+            }
+
+            if (minPrecision.index >= 0) {
+                html += `
+                    <div class="metric-card">
+                        <div class="metric-name">最低精准率</div>
+                        <div class="metric-value">${minPrecision.value.toFixed(2)}%</div>
+                        <div class="metric-name">${labelMap[minPrecision.index] || `值${minPrecision.index}`}</div>
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
         }
 
         // 显示详细信息
