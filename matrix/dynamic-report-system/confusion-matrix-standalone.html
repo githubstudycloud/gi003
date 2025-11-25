@@ -1141,6 +1141,19 @@
                 html += '</tr>';
             }
 
+            // 计算总数和总召回率、精准率
+            let totalCount = 0;
+            let totalCorrect = 0;
+            for (let i = 0; i < matrixSize; i++) {
+                for (let j = 0; j < matrixSize; j++) {
+                    totalCount += matrix[i][j];
+                    if (i === j) totalCorrect += matrix[i][j];
+                }
+            }
+            const totalRecall = totalCount > 0 ? ((totalCorrect / totalCount) * 100).toFixed(2) : 0;
+            const totalPrecision = totalCount > 0 ? ((totalCorrect / totalCount) * 100).toFixed(2) : 0;
+            const totalRecallClass = totalRecall >= 90 ? 'recall-high' : (totalRecall >= 70 ? 'recall-medium' : 'recall-low');
+
             // 合计行
             html += '<tr class="sum-row">';
             html += '<td>合计</td>';
@@ -1152,8 +1165,8 @@
                 }
                 html += `<td>${colSum}</td>`;
             }
-            html += '<td></td>';
-            html += '<td></td>';
+            html += `<td>${totalCount}</td>`;
+            html += `<td class="${totalRecallClass}">${totalRecall}%</td>`;
             html += '</tr>';
 
             // 精准率行
@@ -1169,8 +1182,8 @@
                 const precisionClass = precision >= 90 ? 'recall-high' : (precision >= 70 ? 'recall-medium' : 'recall-low');
                 html += `<td class="${precisionClass}">${precision}%</td>`;
             }
-            html += '<td></td>';
-            html += '<td></td>';
+            html += `<td></td>`;
+            html += `<td class="${totalRecallClass}">${totalPrecision}%</td>`;
             html += '</tr>';
 
             html += '</tbody>';

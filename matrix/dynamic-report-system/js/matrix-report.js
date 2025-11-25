@@ -237,7 +237,8 @@ function renderMatrix() {
         html += `<td>${matrixData.colSum[j]}</td>`;
     }
     html += `<td>${matrixData.totalCount}</td>`;
-    html += '<td>-</td>';
+    const totalRecallClass = getMetricClass(matrixData.accuracy);
+    html += `<td class="${totalRecallClass}">${matrixData.accuracy.toFixed(2)}%</td>`;
     html += '</tr>';
 
     // 精准率行
@@ -247,7 +248,8 @@ function renderMatrix() {
         const precisionClass = getMetricClass(matrixData.precision[j]);
         html += `<td class="${precisionClass}">${matrixData.precision[j].toFixed(2)}%</td>`;
     }
-    html += `<td colspan="2">准确率: ${matrixData.accuracy.toFixed(2)}%</td>`;
+    html += '<td>-</td>';
+    html += `<td class="${totalRecallClass}">${matrixData.accuracy.toFixed(2)}%</td>`;
     html += '</tr>';
 
     html += '</tbody>';
