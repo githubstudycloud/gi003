@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>混淆矩阵报告生成系统 - 单文件版</title>
+    <style>
+        /* 通用样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #409EFF;
+            --success-color: #67C23A;
+            --warning-color: #E6A23C;
+            --danger-color: #F56C6C;
+            --info-color: #909399;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --border-color: #dcdfe6;
+            --text-primary: #303133;
+            --text-regular: #606266;
+            --text-secondary: #909399;
+            --shadow-base: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 页面切换 */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-success { background: var(--success-color); color: white; }
+        .btn-warning { background: var(--warning-color); color: white; }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-info { background: var(--info-color); color: white; }
+        .btn-secondary { background: #f4f4f5; color: var(--text-regular); border: 1px solid var(--border-color); }
+        .btn-large { padding: 14px 40px; font-size: 16px; }
+
+        /* 头部 */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        header h1 { font-size: 32px; margin-bottom: 10px; }
+        header .subtitle { font-size: 16px; opacity: 0.95; }
+
+        /* 表单样式 */
+        .section {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-base);
+        }
+
+        .section h2 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 18px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-item { margin-bottom: 20px; }
+        .form-item label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-regular);
+            font-weight: 500;
+        }
+
+        .form-item input[type="text"],
+        .form-item input[type="number"],
+        .form-item select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-item input:focus, .form-item select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .required { color: var(--danger-color); }
+
+        /* 示例数据选择器 */
+        .sample-data-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 6px;
+            border: 1px dashed var(--border-color);
+            margin-top: 16px;
+        }
+
+        .sample-data-selector label {
+            color: var(--text-regular);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* 数据预览 */
+        .data-preview {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 12px;
+        }
+
+        .data-preview pre {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-regular);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* 统计卡片 */
+        .data-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            padding: 16px;
+            border-radius: 6px;
+            text-align: center;
+            background: white;
+            box-shadow: var(--shadow-base);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .stat-card .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* 操作区域 */
+        .action-section {
+            text-align: center;
+            padding: 40px 0 20px 0;
+        }
+
+        /* 配置组 */
+        .config-group {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .config-group h3 {
+            color: var(--text-regular);
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        /* 策略选择器 */
+        .strategy-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .radio-inline:hover {
+            border-color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        /* 报告页面 */
+        .report-header {
+            background: white;
+            color: #333;
+            padding: 24px;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-base);
+        }
+
+        .report-header h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .report-meta {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .report-meta span { margin: 0 8px; }
+
+        /* 统计卡片 */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-total { border-left-color: #409EFF; }
+        .stat-correct { border-left-color: #67C23A; }
+        .stat-wrong { border-left-color: #F56C6C; }
+        .stat-accuracy { border-left-color: #E6A23C; }
+
+        /* 矩阵表格 */
+        .matrix-wrapper {
+            overflow-x: auto;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-base);
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 800px;
+        }
+
+        .matrix-table th,
+        .matrix-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .matrix-table th {
+            background: #409EFF;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* 左侧列样式 */
+        .matrix-table .label-cell {
+            background: #f0f9ff;
+            font-weight: 600;
+            text-align: left;
+            padding-left: 15px;
+            min-width: 150px;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            border-right: 2px solid #ddd;
+        }
+
+        .matrix-table th.label-header {
+            background: #67C23A;
+            position: sticky;
+            left: 0;
+            z-index: 15;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        .matrix-table .value-cell {
+            background: #f0f9ff;
+            font-weight: 600;
+            text-align: center;
+            min-width: 80px;
+            position: sticky;
+            left: 150px;
+            z-index: 5;
+        }
+
+        .matrix-table th.value-header {
+            background: #67C23A;
+            position: sticky;
+            left: 150px;
+            z-index: 15;
+        }
+
+        /* 矩阵单元格 */
+        .cell-correct {
+            background: #d4edda !important;
+            color: #155724;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cell-error {
+            background: #fff3cd;
+            color: #856404;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cell-zero {
+            background: #f8f9fa;
+            color: #aaa;
+        }
+
+        .cell-clickable:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1;
+        }
+
+        /* 统计列 */
+        .sum-column {
+            background: #e7f3ff !important;
+            font-weight: bold;
+        }
+
+        .recall-column, .precision-column {
+            background: #e8f5e9 !important;
+            font-weight: bold;
+        }
+
+        .recall-high { color: #2e7d32; }
+        .recall-medium { color: #f57c00; }
+        .recall-low { color: #c62828; }
+
+        /* 统计行 */
+        .sum-row td {
+            background: #e7f3ff !important;
+            font-weight: bold;
+        }
+
+        .precision-row td {
+            background: #e8f5e9 !important;
+            font-weight: bold;
+        }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 0;
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 8px;
+            max-height: 85vh;
+            overflow: hidden;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: #f9fafb;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover { color: #000; }
+
+        .modal-body {
+            padding: 24px;
+            max-height: calc(85vh - 80px);
+            overflow-y: auto;
+        }
+
+        .detail-info {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #f0f7ff;
+            border-radius: 6px;
+        }
+
+        .detail-info p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .detail-table th {
+            background: #f5f7fa;
+            font-weight: 600;
+            color: var(--text-regular);
+        }
+
+        .detail-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .badge-pass {
+            background: #67C23A;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .badge-fail {
+            background: #F56C6C;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        /* 消息提示 */
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+            z-index: 9999;
+            animation: slideDown 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        .message-success { background: var(--success-color); }
+        .message-error { background: var(--danger-color); }
+        .message-warning { background: var(--warning-color); }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .section { padding: 16px; }
+            header h1 { font-size: 24px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 配置页面 -->
+        <div id="configPage" class="page active">
+            <header>
+                <h1>📊 混淆矩阵报告生成系统</h1>
+                <p class="subtitle">动态配置字段映射，一键生成专业混淆矩阵分析报告</p>
+            </header>
+
+            <main>
+                <!-- 报告基本信息 -->
+                <section class="section">
+                    <h2>📝 报告基本信息</h2>
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label for="reportName">报告名称 <span class="required">*</span></label>
+                            <input type="text" id="reportName" placeholder="请输入报告名称" value="分类预测混淆矩阵分析">
+                        </div>
+                        <div class="form-item">
+                            <label for="versionName">版本名称 <span class="required">*</span></label>
+                            <input type="text" id="versionName" placeholder="例如: v1.0.0" value="v1.0.0">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 数据导入 -->
+                <section class="section">
+                    <h2>📂 数据导入</h2>
+                    <div class="sample-data-selector">
+                        <label>选择示例数据:</label>
+                        <button class="btn btn-info" onclick="loadSampleData(10)">
+                            🎲 10维矩阵 (200条)
+                        </button>
+                        <button class="btn btn-success" onclick="loadSampleData(15)">
+                            ⭐ 15维矩阵 (300条) - 高质量
+                        </button>
+                        <button class="btn btn-info" onclick="loadSampleData(20)">
+                            🎲 20维矩阵 (206条)
+                        </button>
+                        <button class="btn btn-info" onclick="loadSampleData(30)">
+                            🎲 30维矩阵 (394条)
+                        </button>
+                    </div>
+                    <div id="dataPreview" class="data-preview"></div>
+                </section>
+
+                <!-- 矩阵配置 -->
+                <section id="matrixConfig" class="section">
+                    <h2>⚙️ 矩阵配置</h2>
+
+                    <!-- 动态字段选择 -->
+                    <div class="config-group">
+                        <h3>🔗 动态字段映射</h3>
+                        <div class="form-grid">
+                            <div class="form-item">
+                                <label for="expectedField">1. 预期值字段 <span class="required">*</span></label>
+                                <select id="expectedField">
+                                    <option value="">-- 请先加载数据 --</option>
+                                </select>
+                            </div>
+                            <div class="form-item">
+                                <label for="actualField">2. 实际值字段 <span class="required">*</span></label>
+                                <select id="actualField">
+                                    <option value="">-- 请先加载数据 --</option>
+                                </select>
+                            </div>
+                            <div class="form-item">
+                                <label for="labelField">3. 实际值显示说明字段 <span class="required">*</span></label>
+                                <select id="labelField">
+                                    <option value="">-- 请先加载数据 --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 最值策略 -->
+                    <div class="config-group">
+                        <h3>📊 矩阵最值策略</h3>
+                        <div class="strategy-selector">
+                            <label class="radio-inline">
+                                <input type="radio" name="maxStrategy" value="auto" checked>
+                                <span>自动计算最大值 (从预期值和实际值中自动计算)</span>
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="maxStrategy" value="manual">
+                                <span>手动设置最大值:</span>
+                                <input type="number" id="manualMax" min="1" value="10" disabled>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 空值处理策略 -->
+                    <div class="config-group">
+                        <h3>🔧 空值/异常值处理策略</h3>
+                        <div class="strategy-selector">
+                            <label class="radio-inline">
+                                <input type="radio" name="nullStrategy" value="zero" checked>
+                                <span>记为0 (将空值视为0处理)</span>
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="nullStrategy" value="discard">
+                                <span>抛弃 (忽略包含空值的记录)</span>
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="nullStrategy" value="error">
+                                <span>报异常 (发现空值时停止并报错)</span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 生成按钮 -->
+                <div class="action-section">
+                    <button class="btn btn-primary btn-large" onclick="generateReport()">
+                        🚀 生成混淆矩阵报告
+                    </button>
+                </div>
+            </main>
+        </div>
+
+        <!-- 报告页面 -->
+        <div id="reportPage" class="page">
+            <div class="report-header">
+                <button class="btn btn-secondary" onclick="goBack()">
+                    ← 返回配置
+                </button>
+                <h1 id="reportTitle">混淆矩阵报告</h1>
+                <div class="report-meta" id="reportMeta"></div>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="stats-section">
+                <div class="stat-card stat-total">
+                    <div class="value" id="totalCount">0</div>
+                    <div class="label">总样本数</div>
+                </div>
+                <div class="stat-card stat-correct">
+                    <div class="value" id="correctCount">0</div>
+                    <div class="label">预测正确数</div>
+                </div>
+                <div class="stat-card stat-wrong">
+                    <div class="value" id="wrongCount">0</div>
+                    <div class="label">预测错误数</div>
+                </div>
+                <div class="stat-card stat-accuracy">
+                    <div class="value" id="accuracy">0%</div>
+                    <div class="label">总准确率</div>
+                </div>
+            </div>
+
+            <!-- 混淆矩阵 -->
+            <div class="matrix-wrapper">
+                <table class="matrix-table" id="matrixTable"></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详细数据模态框 -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔍 单元格详细数据</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentData = null;
+        let reportConfig = null;
+        let matrixData = null;
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 监听最值策略切换
+            const maxStrategyRadios = document.querySelectorAll('input[name="maxStrategy"]');
+            maxStrategyRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const manualInput = document.getElementById('manualMax');
+                    manualInput.disabled = !document.querySelector('input[name="maxStrategy"][value="manual"]').checked;
+                });
+            });
+        });
+
+        // 生成动态数据 (常规80%准确率)
+        function generateDynamicData(dimensions, count) {
+            const levelNames = generateLevelNames(dimensions);
+            const scenarios = ['电商推荐', '内容推荐', '搜索排序', '广告投放', '智能客服'];
+            const factors = ['用户活跃度', '点击率', '转化率', '留存率', 'ROI', 'CTR', 'CVR', '满意度', 'NPS', '复购率'];
+
+            const data = [];
+            const samplesPerLevel = Math.floor(count / dimensions);
+            const extraSamples = count % dimensions;
+
+            let id = 1;
+            for (let level = 0; level < dimensions; level++) {
+                const numSamples = samplesPerLevel + (level < extraSamples ? 1 : 0);
+
+                for (let j = 0; j < numSamples; j++) {
+                    let actual;
+                    if (Math.random() < 0.80) {
+                        actual = level;
+                    } else {
+                        const offset = Math.random() < 0.5 ?
+                            (Math.random() < 0.5 ? -1 : 1) :
+                            (Math.random() < 0.5 ? -2 : 2);
+                        actual = Math.max(0, Math.min(dimensions - 1, level + offset));
+                    }
+
+                    data.push({
+                        id: id++,
+                        expected_level: level,
+                        actual_level: actual,
+                        level_name: levelNames[level],
+                        scenario: scenarios[Math.floor(Math.random() * scenarios.length)],
+                        factor: factors[Math.floor(Math.random() * factors.length)],
+                        score: Math.floor(Math.random() * 40) + 60,
+                        timestamp: `2025-11-25 ${Math.floor(Math.random() * 13) + 8}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`
+                    });
+                }
+            }
+
+            // 打乱数据
+            for (let i = data.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [data[i], data[j]] = [data[j], data[i]];
+            }
+
+            return data;
+        }
+
+        // 生成高质量数据 (矩阵单元格0值尽可能少)
+        function generateHighQualityData(dimensions, count) {
+            const levelNames = generateLevelNames(dimensions);
+            const scenarios = ['电商推荐', '内容推荐', '搜索排序', '广告投放', '智能客服', 'AI助手', '个性化推送'];
+            const factors = ['用户活跃度', '点击率', '转化率', '留存率', 'ROI', 'CTR', 'CVR', '满意度', 'NPS', '复购率', '参与度', '响应率'];
+
+            const data = [];
+            let id = 1;
+
+            const totalCells = dimensions * dimensions;
+            const matrixDistribution = [];
+
+            // 每个单元格至少1条数据
+            for (let expected = 0; expected < dimensions; expected++) {
+                for (let actual = 0; actual < dimensions; actual++) {
+                    matrixDistribution.push({ expected, actual, count: 1 });
+                }
+            }
+
+            // 剩余数据分配
+            let remainingCount = count - totalCells;
+            const diagonalCount = Math.floor(remainingCount * 0.60);
+            const adjacentCount = Math.floor(remainingCount * 0.30);
+            const otherCount = remainingCount - diagonalCount - adjacentCount;
+
+            // 对角线
+            for (let i = 0; i < dimensions; i++) {
+                const cell = matrixDistribution.find(c => c.expected === i && c.actual === i);
+                cell.count += Math.floor(diagonalCount / dimensions);
+            }
+
+            // 相邻对角线
+            let adjacentCells = [];
+            for (let i = 0; i < dimensions; i++) {
+                if (i > 0) adjacentCells.push({ expected: i, actual: i - 1 });
+                if (i < dimensions - 1) adjacentCells.push({ expected: i, actual: i + 1 });
+            }
+            const perAdjacentCell = Math.floor(adjacentCount / adjacentCells.length);
+            adjacentCells.forEach(pos => {
+                const cell = matrixDistribution.find(c => c.expected === pos.expected && c.actual === pos.actual);
+                cell.count += perAdjacentCell;
+            });
+
+            // 其他位置随机分配
+            for (let i = 0; i < otherCount; i++) {
+                const randomCell = matrixDistribution[Math.floor(Math.random() * matrixDistribution.length)];
+                randomCell.count++;
+            }
+
+            // 生成实际数据
+            matrixDistribution.forEach(cell => {
+                for (let i = 0; i < cell.count; i++) {
+                    data.push({
+                        id: id++,
+                        expected_level: cell.expected,
+                        actual_level: cell.actual,
+                        level_name: levelNames[cell.expected],
+                        scenario: scenarios[Math.floor(Math.random() * scenarios.length)],
+                        factor: factors[Math.floor(Math.random() * factors.length)],
+                        score: Math.floor(Math.random() * 30) + 70,
+                        timestamp: `2025-11-25 ${Math.floor(Math.random() * 13) + 8}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`
+                    });
+                }
+            });
+
+            // 打乱数据
+            for (let i = data.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [data[i], data[j]] = [data[j], data[i]];
+            }
+
+            return data;
+        }
+
+        // 生成等级名称
+        function generateLevelNames(dimensions) {
+            const baseNames = [
+                '极低', '很低', '低', '较低', '偏低',
+                '中下', '中等', '中上', '偏高', '较高',
+                '高', '很高', '极高', '优秀', '卓越',
+                '完美', 'S-', 'S', 'S+', 'SS-',
+                'SS', 'SS+', 'SSS-', 'SSS', 'SSS+',
+                '传奇-', '传奇', '传奇+', '神话', '巅峰'
+            ];
+
+            if (dimensions <= 30) {
+                return baseNames.slice(0, dimensions);
+            }
+
+            const names = [...baseNames];
+            for (let i = 30; i < dimensions; i++) {
+                names.push(`等级${i}`);
+            }
+            return names;
+        }
+
+        // 加载示例数据
+        function loadSampleData(dimensions) {
+            let data, description, count;
+
+            switch(dimensions) {
+                case 10:
+                    count = 200;
+                    description = '10维矩阵 (200条)';
+                    data = generateDynamicData(10, count);
+                    break;
+                case 15:
+                    count = 300;
+                    description = '15维矩阵 (300条) - 高质量';
+                    data = generateHighQualityData(15, count);
+                    break;
+                case 20:
+                    count = 206;
+                    description = '20维矩阵 (206条)';
+                    data = generateDynamicData(20, count);
+                    break;
+                case 30:
+                    count = 394;
+                    description = '30维矩阵 (394条)';
+                    data = generateDynamicData(30, count);
+                    break;
+            }
+
+            currentData = data;
+            displayDataPreview(data);
+            populateFieldSelectors(data);
+            showMessage(`${description} 数据加载成功!`, 'success');
+        }
+
+        // 显示数据预览
+        function displayDataPreview(data) {
+            const preview = document.getElementById('dataPreview');
+            const previewData = data.slice(0, 3);
+
+            let html = '<div class="data-stats">';
+            html += `<div class="stat-card"><div class="value">${data.length}</div><div class="label">总数据条数</div></div>`;
+            html += `<div class="stat-card"><div class="value">${Object.keys(data[0]).length}</div><div class="label">字段数量</div></div>`;
+            html += '</div>';
+            html += '<pre>' + JSON.stringify(previewData, null, 2) + '</pre>';
+            if (data.length > 3) {
+                html += `<p style="text-align:center; color: #909399; margin-top: 10px;">... 还有 ${data.length - 3} 条数据</p>`;
+            }
+
+            preview.innerHTML = html;
+        }
+
+        // 填充字段选择器
+        function populateFieldSelectors(data) {
+            if (!data || data.length === 0) return;
+
+            const fields = Object.keys(data[0]);
+            const selectors = ['expectedField', 'actualField', 'labelField'];
+
+            selectors.forEach(selectorId => {
+                const selector = document.getElementById(selectorId);
+                selector.innerHTML = '<option value="">-- 请选择字段 --</option>';
+                fields.forEach(field => {
+                    selector.innerHTML += `<option value="${field}">${field}</option>`;
+                });
+            });
+
+            // 自动选择默认值
+            document.getElementById('expectedField').value = 'expected_level';
+            document.getElementById('actualField').value = 'actual_level';
+            document.getElementById('labelField').value = 'level_name';
+        }
+
+        // 生成报告
+        function generateReport() {
+            const reportName = document.getElementById('reportName').value.trim();
+            const versionName = document.getElementById('versionName').value.trim();
+
+            if (!reportName || !versionName) {
+                showMessage('请输入报告名称和版本名称', 'warning');
+                return;
+            }
+
+            if (!currentData) {
+                showMessage('请先加载数据', 'warning');
+                return;
+            }
+
+            const expectedField = document.getElementById('expectedField').value;
+            const actualField = document.getElementById('actualField').value;
+            const labelField = document.getElementById('labelField').value;
+
+            if (!expectedField || !actualField || !labelField) {
+                showMessage('请选择所有必填字段', 'warning');
+                return;
+            }
+
+            if (expectedField === actualField || expectedField === labelField || actualField === labelField) {
+                showMessage('字段不能重复选择', 'warning');
+                return;
+            }
+
+            const maxStrategy = document.querySelector('input[name="maxStrategy"]:checked').value;
+            const manualMax = parseInt(document.getElementById('manualMax').value);
+            const nullStrategy = document.querySelector('input[name="nullStrategy"]:checked').value;
+
+            reportConfig = {
+                reportName,
+                versionName,
+                expectedField,
+                actualField,
+                labelField,
+                maxStrategy,
+                manualMax,
+                nullStrategy,
+                generateTime: new Date().toLocaleString('zh-CN')
+            };
+
+            processMatrixData();
+            showReportPage();
+        }
+
+        // 处理矩阵数据
+        function processMatrixData() {
+            const { expectedField, actualField, labelField, maxStrategy, manualMax, nullStrategy } = reportConfig;
+
+            // 计算矩阵大小
+            let maxValue = 0;
+            if (maxStrategy === 'manual') {
+                maxValue = manualMax;
+            } else {
+                currentData.forEach(item => {
+                    const exp = item[expectedField];
+                    const act = item[actualField];
+                    if (exp !== null && exp !== undefined) maxValue = Math.max(maxValue, exp);
+                    if (act !== null && act !== undefined) maxValue = Math.max(maxValue, act);
+                });
+            }
+
+            const matrixSize = maxValue + 1;
+
+            // 初始化矩阵
+            const matrix = Array(matrixSize).fill(0).map(() => Array(matrixSize).fill(0));
+            const labelMap = {};
+            const cellDetails = {};
+
+            // 填充矩阵
+            currentData.forEach(item => {
+                const exp = item[expectedField];
+                const act = item[actualField];
+                const label = item[labelField];
+
+                if (exp === null || exp === undefined || act === null || act === undefined) {
+                    if (nullStrategy === 'error') {
+                        throw new Error('数据中包含空值');
+                    } else if (nullStrategy === 'discard') {
+                        return;
+                    }
+                }
+
+                if (exp >= 0 && exp < matrixSize && act >= 0 && act < matrixSize) {
+                    matrix[exp][act]++;
+                    labelMap[exp] = label || `等级${exp}`;
+
+                    const key = `${exp}_${act}`;
+                    if (!cellDetails[key]) {
+                        cellDetails[key] = [];
+                    }
+                    cellDetails[key].push(item);
+                }
+            });
+
+            matrixData = { matrix, matrixSize, labelMap, cellDetails };
+        }
+
+        // 显示报告页面
+        function showReportPage() {
+            document.getElementById('configPage').classList.remove('active');
+            document.getElementById('reportPage').classList.add('active');
+
+            document.getElementById('reportTitle').textContent = reportConfig.reportName;
+            document.getElementById('reportMeta').innerHTML = `
+                <span>版本: ${reportConfig.versionName}</span>
+                <span>生成时间: ${reportConfig.generateTime}</span>
+            `;
+
+            renderMatrix();
+            calculateStatistics();
+        }
+
+        // 渲染矩阵
+        function renderMatrix() {
+            const { matrix, matrixSize, labelMap } = matrixData;
+            const table = document.getElementById('matrixTable');
+
+            let html = '<thead><tr>';
+            html += '<th class="label-header">显示说明</th>';
+            html += '<th class="value-header">实际\\预测</th>';
+            for (let i = 0; i < matrixSize; i++) {
+                html += `<th>${i}</th>`;
+            }
+            html += '<th>合计</th>';
+            html += '<th>召回率</th>';
+            html += '</tr></thead>';
+
+            html += '<tbody>';
+
+            // 数据行
+            for (let i = 0; i < matrixSize; i++) {
+                html += '<tr>';
+
+                const label = labelMap[i] || `值${i}`;
+                html += `<td class="label-cell">${label}</td>`;
+                html += `<td class="value-cell">${i}</td>`;
+
+                let rowSum = 0;
+                for (let j = 0; j < matrixSize; j++) {
+                    const value = matrix[i][j];
+                    rowSum += value;
+
+                    let cellClass = value > 0 ? 'cell-clickable ' : '';
+                    if (value === 0) {
+                        cellClass += 'cell-zero';
+                    } else if (i === j) {
+                        cellClass += 'cell-correct';
+                    } else {
+                        cellClass += 'cell-error';
+                    }
+
+                    html += `<td class="${cellClass}" onclick="showDetail(${i}, ${j}, ${value})">${value}</td>`;
+                }
+
+                const recall = rowSum > 0 ? ((matrix[i][i] / rowSum) * 100).toFixed(2) : 0;
+                const recallClass = recall >= 90 ? 'recall-high' : (recall >= 70 ? 'recall-medium' : 'recall-low');
+
+                html += `<td class="sum-column">${rowSum}</td>`;
+                html += `<td class="recall-column ${recallClass}">${recall}%</td>`;
+                html += '</tr>';
+            }
+
+            // 合计行
+            html += '<tr class="sum-row">';
+            html += '<td>合计</td>';
+            html += '<td></td>';
+            for (let j = 0; j < matrixSize; j++) {
+                let colSum = 0;
+                for (let i = 0; i < matrixSize; i++) {
+                    colSum += matrix[i][j];
+                }
+                html += `<td>${colSum}</td>`;
+            }
+            html += '<td></td>';
+            html += '<td></td>';
+            html += '</tr>';
+
+            // 精准率行
+            html += '<tr class="precision-row">';
+            html += '<td>精准率</td>';
+            html += '<td></td>';
+            for (let j = 0; j < matrixSize; j++) {
+                let colSum = 0;
+                for (let i = 0; i < matrixSize; i++) {
+                    colSum += matrix[i][j];
+                }
+                const precision = colSum > 0 ? ((matrix[j][j] / colSum) * 100).toFixed(2) : 0;
+                const precisionClass = precision >= 90 ? 'recall-high' : (precision >= 70 ? 'recall-medium' : 'recall-low');
+                html += `<td class="${precisionClass}">${precision}%</td>`;
+            }
+            html += '<td></td>';
+            html += '<td></td>';
+            html += '</tr>';
+
+            html += '</tbody>';
+
+            table.innerHTML = html;
+        }
+
+        // 计算统计数据
+        function calculateStatistics() {
+            const { matrix, matrixSize } = matrixData;
+
+            let total = 0;
+            let correct = 0;
+
+            for (let i = 0; i < matrixSize; i++) {
+                for (let j = 0; j < matrixSize; j++) {
+                    total += matrix[i][j];
+                    if (i === j) correct += matrix[i][j];
+                }
+            }
+
+            const accuracy = total > 0 ? ((correct / total) * 100).toFixed(2) : 0;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('wrongCount').textContent = total - correct;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+
+        // 显示详细信息
+        function showDetail(expected, actual, count) {
+            if (count === 0) return;
+
+            const { cellDetails } = matrixData;
+            const key = `${expected}_${actual}`;
+            const details = cellDetails[key] || [];
+
+            const modal = document.getElementById('detailModal');
+            const modalBody = document.getElementById('modalBody');
+
+            let html = `
+                <div class="detail-info">
+                    <p><strong>预期值:</strong> ${expected}</p>
+                    <p><strong>实际值:</strong> ${actual}</p>
+                    <p><strong>记录数:</strong> ${count}</p>
+                    <p><strong>状态:</strong> ${expected === actual ? '<span class="badge-pass">预测正确</span>' : '<span class="badge-fail">预测错误</span>'}</p>
+                </div>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>预期等级</th>
+                            <th>实际等级</th>
+                            <th>等级名称</th>
+                            <th>场景</th>
+                            <th>因子</th>
+                            <th>分数</th>
+                            <th>时间戳</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            details.slice(0, 20).forEach(item => {
+                html += `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.expected_level}</td>
+                        <td>${item.actual_level}</td>
+                        <td>${item.level_name}</td>
+                        <td>${item.scenario}</td>
+                        <td>${item.factor}</td>
+                        <td>${item.score}</td>
+                        <td>${item.timestamp}</td>
+                    </tr>
+                `;
+            });
+
+            if (details.length > 20) {
+                html += `<tr><td colspan="8" style="text-align: center; color: #999;">... 还有 ${details.length - 20} 条记录</td></tr>`;
+            }
+
+            html += '</tbody></table>';
+            modalBody.innerHTML = html;
+            modal.style.display = 'block';
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        // 返回配置页面
+        function goBack() {
+            document.getElementById('reportPage').classList.remove('active');
+            document.getElementById('configPage').classList.add('active');
+        }
+
+        // 显示消息
+        function showMessage(text, type = 'success') {
+            const message = document.createElement('div');
+            message.className = `message message-${type}`;
+            message.textContent = text;
+            document.body.appendChild(message);
+
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
