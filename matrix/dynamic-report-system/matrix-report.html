@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>混淆矩阵报告</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/matrix.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 报告头部 -->
+        <header class="report-header">
+            <div class="header-top">
+                <button class="btn btn-secondary" onclick="goBack()">
+                    ← 返回主页
+                </button>
+                <h1 id="reportTitle">混淆矩阵报告</h1>
+                <button class="btn btn-success" onclick="exportReport()">
+                    📥 导出报告
+                </button>
+            </div>
+            <div class="report-meta">
+                <span id="versionName">版本: v1.0.0</span>
+                <span>|</span>
+                <span id="generateTime">生成时间: 2025-11-25 08:00:00</span>
+            </div>
+        </header>
+
+        <!-- 统计信息 -->
+        <section class="stats-section">
+            <div class="stat-card stat-total">
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label">总样本数</div>
+            </div>
+            <div class="stat-card stat-correct">
+                <div class="stat-value" id="correctCount">0</div>
+                <div class="stat-label">预测正确数</div>
+            </div>
+            <div class="stat-card stat-wrong">
+                <div class="stat-value" id="wrongCount">0</div>
+                <div class="stat-label">预测错误数</div>
+            </div>
+            <div class="stat-card stat-accuracy">
+                <div class="stat-value" id="accuracy">0%</div>
+                <div class="stat-label">总准确率</div>
+            </div>
+        </section>
+
+        <!-- 混淆矩阵 -->
+        <section class="matrix-section section">
+            <h2>📊 混淆矩阵</h2>
+            <div class="matrix-wrapper">
+                <table class="matrix-table" id="matrixTable">
+                    <!-- 通过JavaScript动态生成 -->
+                </table>
+            </div>
+        </section>
+
+        <!-- 详细指标 -->
+        <section class="metrics-section section">
+            <h2>📈 详细指标</h2>
+            <div class="metrics-grid" id="metricsGrid">
+                <!-- 通过JavaScript动态生成 -->
+            </div>
+        </section>
+    </div>
+
+    <!-- 详情模态框 -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔍 数据详情</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="detail-info">
+                    <p><strong>实际值:</strong> <span id="modalActual">-</span></p>
+                    <p><strong>预测值:</strong> <span id="modalExpected">-</span></p>
+                    <p><strong>数据条数:</strong> <span id="modalCount">0</span></p>
+                </div>
+                <div class="detail-table-wrapper">
+                    <table class="detail-table" id="detailTable">
+                        <!-- 动态生成 -->
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/matrix-report.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>场景/因子评估报告</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/scenario.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 报告头部 -->
+        <header class="report-header">
+            <div class="header-top">
+                <button class="btn btn-secondary" onclick="goBack()">
+                    ← 返回主页
+                </button>
+                <h1 id="reportTitle">场景/因子评估报告</h1>
+                <button class="btn btn-success" onclick="exportReport()">
+                    📥 导出报告
+                </button>
+            </div>
+            <div class="report-meta">
+                <span id="versionName">版本: v1.0.0</span>
+                <span>|</span>
+                <span id="generateTime">生成时间: 2025-11-25 08:00:00</span>
+            </div>
+        </header>
+
+        <!-- 整体统计 -->
+        <section class="section">
+            <h2>📊 整体统计</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">数据总量</div>
+                    <div class="stat-value" id="totalRecords">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">场景数量</div>
+                    <div class="stat-value" id="scenarioCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">因子数量</div>
+                    <div class="stat-value" id="factorCount">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据表格 -->
+        <section class="section">
+            <h2>📋 详细数据</h2>
+            <div class="table-wrapper">
+                <table class="data-table" id="dataTable">
+                    <thead id="tableHead">
+                        <!-- 动态生成 -->
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- 动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/scenario-report.js"></script>
+</body>
+</html>

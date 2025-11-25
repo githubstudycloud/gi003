@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态报告生成系统</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 动态报告生成系统</h1>
+            <p class="subtitle">支持多种报告类型,灵活配置字段映射</p>
+        </header>
+
+        <main>
+            <!-- 报告基本信息 -->
+            <section class="section">
+                <h2>📝 报告基本信息</h2>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label for="reportName">报告名称 <span class="required">*</span></label>
+                        <input type="text" id="reportName" placeholder="请输入报告名称" required>
+                    </div>
+                    <div class="form-item">
+                        <label for="versionName">版本名称 <span class="required">*</span></label>
+                        <input type="text" id="versionName" placeholder="例如: v1.0.0" required>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 报告类型选择 -->
+            <section class="section">
+                <h2>📋 版本类型</h2>
+                <div class="report-type-selector">
+                    <label class="radio-card">
+                        <input type="radio" name="reportType" value="scenario-factor" checked>
+                        <div class="card-content">
+                            <div class="card-icon">🎯</div>
+                            <div class="card-title">场景/因子评估报告</div>
+                            <div class="card-desc">用于评估不同场景和因子的表现</div>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="reportType" value="confusion-matrix">
+                        <div class="card-content">
+                            <div class="card-icon">📊</div>
+                            <div class="card-title">分类预测混淆矩阵统计报告</div>
+                            <div class="card-desc">生成预测值与实际值的混淆矩阵分析</div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 数据导入 -->
+            <section class="section">
+                <h2>📂 数据导入</h2>
+                <div class="upload-area">
+                    <input type="file" id="fileInput" accept=".json" style="display: none;">
+                    <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                        📁 选择JSON文件
+                    </button>
+                    <span id="fileName" class="file-name">未选择文件</span>
+                </div>
+                <div class="sample-data-selector">
+                    <label>或选择示例数据:</label>
+                    <button class="btn btn-info" onclick="loadSampleData(10)">
+                        🎲 10维矩阵 (200条)
+                    </button>
+                    <button class="btn btn-info" onclick="loadSampleData(20)">
+                        🎲 20维矩阵 (206条)
+                    </button>
+                    <button class="btn btn-info" onclick="loadSampleData(30)">
+                        🎲 30维矩阵 (394条)
+                    </button>
+                </div>
+                <div id="dataPreview" class="data-preview"></div>
+            </section>
+
+            <!-- 混淆矩阵配置 (仅在选择矩阵报告时显示) -->
+            <section id="matrixConfig" class="section" style="display: none;">
+                <h2>⚙️ 矩阵配置</h2>
+
+                <!-- 动态字段选择 -->
+                <div class="config-group">
+                    <h3>🔗 动态字段映射</h3>
+                    <div class="form-grid">
+                        <div class="form-item">
+                            <label for="expectedField">1. 预期值字段 <span class="required">*</span></label>
+                            <select id="expectedField" required>
+                                <option value="">-- 请选择字段 --</option>
+                            </select>
+                        </div>
+                        <div class="form-item">
+                            <label for="actualField">2. 实际值字段 <span class="required">*</span></label>
+                            <select id="actualField" required>
+                                <option value="">-- 请选择字段 --</option>
+                            </select>
+                        </div>
+                        <div class="form-item">
+                            <label for="labelField">3. 实际值显示说明字段 <span class="required">*</span></label>
+                            <select id="labelField" required>
+                                <option value="">-- 请选择字段 --</option>
+                            </select>
+                            <small class="hint">用于在矩阵左侧第一列显示实际值的说明</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 矩阵最值策略 -->
+                <div class="config-group">
+                    <h3>📐 矩阵最值策略</h3>
+                    <div class="strategy-selector">
+                        <label class="radio-inline">
+                            <input type="radio" name="maxStrategy" value="auto" checked>
+                            自动计算(取实际值和预期值的最大值)
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="maxStrategy" value="manual">
+                            手动设置:
+                            <input type="number" id="manualMax" min="1" max="1000" value="16" disabled>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 空值处理策略 -->
+                <div class="config-group">
+                    <h3>🛡️ 空值/异常数据处理策略</h3>
+                    <div class="strategy-selector">
+                        <label class="radio-inline">
+                            <input type="radio" name="nullStrategy" value="zero" checked>
+                            记为 0
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="nullStrategy" value="discard">
+                            抛弃(跳过该数据)
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="nullStrategy" value="error">
+                            报异常(不允许计算)
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 生成按钮 -->
+            <section class="action-section">
+                <button class="btn btn-primary btn-large" onclick="generateReport()">
+                    🚀 生成报告
+                </button>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

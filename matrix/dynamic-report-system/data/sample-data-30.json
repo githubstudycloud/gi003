@@ -1,0 +1,3548 @@
+[
+  {
+    "id": 1,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 78
+  },
+  {
+    "id": 2,
+    "expected_level": 0,
+    "actual_level": 2,
+    "level_name": "极低",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 81
+  },
+  {
+    "id": 3,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "智能客服",
+    "factor": "用户活跃度",
+    "score": 77
+  },
+  {
+    "id": 4,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 91
+  },
+  {
+    "id": 5,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 98
+  },
+  {
+    "id": 6,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "智能客服",
+    "factor": "转化率",
+    "score": 64
+  },
+  {
+    "id": 7,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "搜索排序",
+    "factor": "点击率",
+    "score": 93
+  },
+  {
+    "id": 8,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "内容推荐",
+    "factor": "NPS",
+    "score": 100
+  },
+  {
+    "id": 9,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 47
+  },
+  {
+    "id": 10,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "广告投放",
+    "factor": "留存率",
+    "score": 95
+  },
+  {
+    "id": 11,
+    "expected_level": 0,
+    "actual_level": 1,
+    "level_name": "极低",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 52
+  },
+  {
+    "id": 12,
+    "expected_level": 0,
+    "actual_level": 2,
+    "level_name": "极低",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 66
+  },
+  {
+    "id": 13,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 85
+  },
+  {
+    "id": 14,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "智能客服",
+    "factor": "CVR",
+    "score": 87
+  },
+  {
+    "id": 15,
+    "expected_level": 0,
+    "actual_level": 0,
+    "level_name": "极低",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 78
+  },
+  {
+    "id": 16,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "电商推荐",
+    "factor": "点击率",
+    "score": 60
+  },
+  {
+    "id": 17,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 85
+  },
+  {
+    "id": 18,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 99
+  },
+  {
+    "id": 19,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "内容推荐",
+    "factor": "CVR",
+    "score": 99
+  },
+  {
+    "id": 20,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "电商推荐",
+    "factor": "满意度",
+    "score": 66
+  },
+  {
+    "id": 21,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 73
+  },
+  {
+    "id": 22,
+    "expected_level": 1,
+    "actual_level": 0,
+    "level_name": "很低",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 73
+  },
+  {
+    "id": 23,
+    "expected_level": 1,
+    "actual_level": 0,
+    "level_name": "很低",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 100
+  },
+  {
+    "id": 24,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "内容推荐",
+    "factor": "转化率",
+    "score": 84
+  },
+  {
+    "id": 25,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "智能客服",
+    "factor": "满意度",
+    "score": 43
+  },
+  {
+    "id": 26,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 76
+  },
+  {
+    "id": 27,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "搜索排序",
+    "factor": "CVR",
+    "score": 71
+  },
+  {
+    "id": 28,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "搜索排序",
+    "factor": "CVR",
+    "score": 61
+  },
+  {
+    "id": 29,
+    "expected_level": 1,
+    "actual_level": 1,
+    "level_name": "很低",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 45
+  },
+  {
+    "id": 30,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 54
+  },
+  {
+    "id": 31,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 49
+  },
+  {
+    "id": 32,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 40
+  },
+  {
+    "id": 33,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "智能客服",
+    "factor": "用户活跃度",
+    "score": 66
+  },
+  {
+    "id": 34,
+    "expected_level": 2,
+    "actual_level": 1,
+    "level_name": "低",
+    "scenario": "广告投放",
+    "factor": "转化率",
+    "score": 44
+  },
+  {
+    "id": 35,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "电商推荐",
+    "factor": "NPS",
+    "score": 74
+  },
+  {
+    "id": 36,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 83
+  },
+  {
+    "id": 37,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "电商推荐",
+    "factor": "NPS",
+    "score": 70
+  },
+  {
+    "id": 38,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "搜索排序",
+    "factor": "CVR",
+    "score": 54
+  },
+  {
+    "id": 39,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 80
+  },
+  {
+    "id": 40,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 99
+  },
+  {
+    "id": 41,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 90
+  },
+  {
+    "id": 42,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 47
+  },
+  {
+    "id": 43,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "内容推荐",
+    "factor": "满意度",
+    "score": 90
+  },
+  {
+    "id": 44,
+    "expected_level": 2,
+    "actual_level": 2,
+    "level_name": "低",
+    "scenario": "广告投放",
+    "factor": "ROI",
+    "score": 92
+  },
+  {
+    "id": 45,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "广告投放",
+    "factor": "留存率",
+    "score": 97
+  },
+  {
+    "id": 46,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 74
+  },
+  {
+    "id": 47,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 66
+  },
+  {
+    "id": 48,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 97
+  },
+  {
+    "id": 49,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 41
+  },
+  {
+    "id": 50,
+    "expected_level": 3,
+    "actual_level": 1,
+    "level_name": "较低",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 96
+  },
+  {
+    "id": 51,
+    "expected_level": 3,
+    "actual_level": 1,
+    "level_name": "较低",
+    "scenario": "广告投放",
+    "factor": "CVR",
+    "score": 82
+  },
+  {
+    "id": 52,
+    "expected_level": 3,
+    "actual_level": 5,
+    "level_name": "较低",
+    "scenario": "搜索排序",
+    "factor": "转化率",
+    "score": 78
+  },
+  {
+    "id": 53,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "广告投放",
+    "factor": "满意度",
+    "score": 73
+  },
+  {
+    "id": 54,
+    "expected_level": 3,
+    "actual_level": 2,
+    "level_name": "较低",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 84
+  },
+  {
+    "id": 55,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "智能客服",
+    "factor": "复购率",
+    "score": 45
+  },
+  {
+    "id": 56,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "搜索排序",
+    "factor": "NPS",
+    "score": 100
+  },
+  {
+    "id": 57,
+    "expected_level": 3,
+    "actual_level": 3,
+    "level_name": "较低",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 77
+  },
+  {
+    "id": 58,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 54
+  },
+  {
+    "id": 59,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 73
+  },
+  {
+    "id": 60,
+    "expected_level": 4,
+    "actual_level": 6,
+    "level_name": "偏低",
+    "scenario": "电商推荐",
+    "factor": "留存率",
+    "score": 74
+  },
+  {
+    "id": 61,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 40
+  },
+  {
+    "id": 62,
+    "expected_level": 4,
+    "actual_level": 2,
+    "level_name": "偏低",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 44
+  },
+  {
+    "id": 63,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "智能客服",
+    "factor": "转化率",
+    "score": 52
+  },
+  {
+    "id": 64,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "内容推荐",
+    "factor": "留存率",
+    "score": 60
+  },
+  {
+    "id": 65,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 94
+  },
+  {
+    "id": 66,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 50
+  },
+  {
+    "id": 67,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "智能客服",
+    "factor": "复购率",
+    "score": 74
+  },
+  {
+    "id": 68,
+    "expected_level": 4,
+    "actual_level": 6,
+    "level_name": "偏低",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 46
+  },
+  {
+    "id": 69,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "智能客服",
+    "factor": "转化率",
+    "score": 78
+  },
+  {
+    "id": 70,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "广告投放",
+    "factor": "转化率",
+    "score": 42
+  },
+  {
+    "id": 71,
+    "expected_level": 4,
+    "actual_level": 4,
+    "level_name": "偏低",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 52
+  },
+  {
+    "id": 72,
+    "expected_level": 5,
+    "actual_level": 7,
+    "level_name": "中下",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 57
+  },
+  {
+    "id": 73,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 87
+  },
+  {
+    "id": 74,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 77
+  },
+  {
+    "id": 75,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 48
+  },
+  {
+    "id": 76,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "内容推荐",
+    "factor": "CVR",
+    "score": 94
+  },
+  {
+    "id": 77,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "搜索排序",
+    "factor": "复购率",
+    "score": 100
+  },
+  {
+    "id": 78,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 88
+  },
+  {
+    "id": 79,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 96
+  },
+  {
+    "id": 80,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 100
+  },
+  {
+    "id": 81,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "搜索排序",
+    "factor": "转化率",
+    "score": 58
+  },
+  {
+    "id": 82,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 52
+  },
+  {
+    "id": 83,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "搜索排序",
+    "factor": "留存率",
+    "score": 43
+  },
+  {
+    "id": 84,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 74
+  },
+  {
+    "id": 85,
+    "expected_level": 5,
+    "actual_level": 5,
+    "level_name": "中下",
+    "scenario": "广告投放",
+    "factor": "转化率",
+    "score": 96
+  },
+  {
+    "id": 86,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 53
+  },
+  {
+    "id": 87,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "智能客服",
+    "factor": "满意度",
+    "score": 51
+  },
+  {
+    "id": 88,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "搜索排序",
+    "factor": "留存率",
+    "score": 48
+  },
+  {
+    "id": 89,
+    "expected_level": 6,
+    "actual_level": 5,
+    "level_name": "中等",
+    "scenario": "电商推荐",
+    "factor": "用户活跃度",
+    "score": 47
+  },
+  {
+    "id": 90,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "智能客服",
+    "factor": "转化率",
+    "score": 75
+  },
+  {
+    "id": 91,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 42
+  },
+  {
+    "id": 92,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 91
+  },
+  {
+    "id": 93,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "搜索排序",
+    "factor": "ROI",
+    "score": 61
+  },
+  {
+    "id": 94,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 92
+  },
+  {
+    "id": 95,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "广告投放",
+    "factor": "CVR",
+    "score": 52
+  },
+  {
+    "id": 96,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "搜索排序",
+    "factor": "ROI",
+    "score": 63
+  },
+  {
+    "id": 97,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 89
+  },
+  {
+    "id": 98,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "内容推荐",
+    "factor": "NPS",
+    "score": 57
+  },
+  {
+    "id": 99,
+    "expected_level": 6,
+    "actual_level": 5,
+    "level_name": "中等",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 59
+  },
+  {
+    "id": 100,
+    "expected_level": 6,
+    "actual_level": 6,
+    "level_name": "中等",
+    "scenario": "搜索排序",
+    "factor": "ROI",
+    "score": 90
+  },
+  {
+    "id": 101,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 52
+  },
+  {
+    "id": 102,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 56
+  },
+  {
+    "id": 103,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 95
+  },
+  {
+    "id": 104,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "广告投放",
+    "factor": "留存率",
+    "score": 76
+  },
+  {
+    "id": 105,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 98
+  },
+  {
+    "id": 106,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "广告投放",
+    "factor": "留存率",
+    "score": 95
+  },
+  {
+    "id": 107,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "广告投放",
+    "factor": "ROI",
+    "score": 87
+  },
+  {
+    "id": 108,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "电商推荐",
+    "factor": "用户活跃度",
+    "score": 50
+  },
+  {
+    "id": 109,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "广告投放",
+    "factor": "转化率",
+    "score": 92
+  },
+  {
+    "id": 110,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 68
+  },
+  {
+    "id": 111,
+    "expected_level": 7,
+    "actual_level": 7,
+    "level_name": "中上",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 58
+  },
+  {
+    "id": 112,
+    "expected_level": 7,
+    "actual_level": 5,
+    "level_name": "中上",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 80
+  },
+  {
+    "id": 113,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "内容推荐",
+    "factor": "留存率",
+    "score": 42
+  },
+  {
+    "id": 114,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 100
+  },
+  {
+    "id": 115,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "内容推荐",
+    "factor": "CVR",
+    "score": 51
+  },
+  {
+    "id": 116,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "智能客服",
+    "factor": "用户活跃度",
+    "score": 87
+  },
+  {
+    "id": 117,
+    "expected_level": 8,
+    "actual_level": 9,
+    "level_name": "偏高",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 78
+  },
+  {
+    "id": 118,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 80
+  },
+  {
+    "id": 119,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "电商推荐",
+    "factor": "点击率",
+    "score": 54
+  },
+  {
+    "id": 120,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 99
+  },
+  {
+    "id": 121,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "广告投放",
+    "factor": "ROI",
+    "score": 64
+  },
+  {
+    "id": 122,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 51
+  },
+  {
+    "id": 123,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "电商推荐",
+    "factor": "留存率",
+    "score": 55
+  },
+  {
+    "id": 124,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "智能客服",
+    "factor": "CVR",
+    "score": 80
+  },
+  {
+    "id": 125,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "广告投放",
+    "factor": "ROI",
+    "score": 97
+  },
+  {
+    "id": 126,
+    "expected_level": 8,
+    "actual_level": 7,
+    "level_name": "偏高",
+    "scenario": "广告投放",
+    "factor": "NPS",
+    "score": 82
+  },
+  {
+    "id": 127,
+    "expected_level": 8,
+    "actual_level": 8,
+    "level_name": "偏高",
+    "scenario": "搜索排序",
+    "factor": "CVR",
+    "score": 40
+  },
+  {
+    "id": 128,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "广告投放",
+    "factor": "ROI",
+    "score": 97
+  },
+  {
+    "id": 129,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "智能客服",
+    "factor": "满意度",
+    "score": 99
+  },
+  {
+    "id": 130,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "内容推荐",
+    "factor": "CVR",
+    "score": 95
+  },
+  {
+    "id": 131,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 92
+  },
+  {
+    "id": 132,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "搜索排序",
+    "factor": "留存率",
+    "score": 68
+  },
+  {
+    "id": 133,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "内容推荐",
+    "factor": "转化率",
+    "score": 59
+  },
+  {
+    "id": 134,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "内容推荐",
+    "factor": "转化率",
+    "score": 85
+  },
+  {
+    "id": 135,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 78
+  },
+  {
+    "id": 136,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 85
+  },
+  {
+    "id": 137,
+    "expected_level": 9,
+    "actual_level": 11,
+    "level_name": "较高",
+    "scenario": "内容推荐",
+    "factor": "NPS",
+    "score": 77
+  },
+  {
+    "id": 138,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "内容推荐",
+    "factor": "CVR",
+    "score": 61
+  },
+  {
+    "id": 139,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "电商推荐",
+    "factor": "留存率",
+    "score": 73
+  },
+  {
+    "id": 140,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 50
+  },
+  {
+    "id": 141,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 99
+  },
+  {
+    "id": 142,
+    "expected_level": 9,
+    "actual_level": 9,
+    "level_name": "较高",
+    "scenario": "广告投放",
+    "factor": "满意度",
+    "score": 69
+  },
+  {
+    "id": 143,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 56
+  },
+  {
+    "id": 144,
+    "expected_level": 10,
+    "actual_level": 8,
+    "level_name": "高",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 78
+  },
+  {
+    "id": 145,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 88
+  },
+  {
+    "id": 146,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "智能客服",
+    "factor": "CTR",
+    "score": 76
+  },
+  {
+    "id": 147,
+    "expected_level": 10,
+    "actual_level": 12,
+    "level_name": "高",
+    "scenario": "内容推荐",
+    "factor": "留存率",
+    "score": 68
+  },
+  {
+    "id": 148,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "电商推荐",
+    "factor": "用户活跃度",
+    "score": 67
+  },
+  {
+    "id": 149,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "搜索排序",
+    "factor": "复购率",
+    "score": 63
+  },
+  {
+    "id": 150,
+    "expected_level": 10,
+    "actual_level": 11,
+    "level_name": "高",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 100
+  },
+  {
+    "id": 151,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "搜索排序",
+    "factor": "点击率",
+    "score": 64
+  },
+  {
+    "id": 152,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "搜索排序",
+    "factor": "复购率",
+    "score": 45
+  },
+  {
+    "id": 153,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 58
+  },
+  {
+    "id": 154,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 92
+  },
+  {
+    "id": 155,
+    "expected_level": 10,
+    "actual_level": 10,
+    "level_name": "高",
+    "scenario": "内容推荐",
+    "factor": "转化率",
+    "score": 57
+  },
+  {
+    "id": 156,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "搜索排序",
+    "factor": "转化率",
+    "score": 98
+  },
+  {
+    "id": 157,
+    "expected_level": 11,
+    "actual_level": 13,
+    "level_name": "很高",
+    "scenario": "智能客服",
+    "factor": "满意度",
+    "score": 57
+  },
+  {
+    "id": 158,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "电商推荐",
+    "factor": "留存率",
+    "score": 68
+  },
+  {
+    "id": 159,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "广告投放",
+    "factor": "点击率",
+    "score": 94
+  },
+  {
+    "id": 160,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "搜索排序",
+    "factor": "转化率",
+    "score": 75
+  },
+  {
+    "id": 161,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 80
+  },
+  {
+    "id": 162,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 49
+  },
+  {
+    "id": 163,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 72
+  },
+  {
+    "id": 164,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 81
+  },
+  {
+    "id": 165,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "搜索排序",
+    "factor": "转化率",
+    "score": 88
+  },
+  {
+    "id": 166,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "搜索排序",
+    "factor": "ROI",
+    "score": 48
+  },
+  {
+    "id": 167,
+    "expected_level": 11,
+    "actual_level": 11,
+    "level_name": "很高",
+    "scenario": "内容推荐",
+    "factor": "复购率",
+    "score": 65
+  },
+  {
+    "id": 168,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "电商推荐",
+    "factor": "NPS",
+    "score": 50
+  },
+  {
+    "id": 169,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "搜索排序",
+    "factor": "NPS",
+    "score": 53
+  },
+  {
+    "id": 170,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 41
+  },
+  {
+    "id": 171,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "搜索排序",
+    "factor": "满意度",
+    "score": 57
+  },
+  {
+    "id": 172,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "内容推荐",
+    "factor": "NPS",
+    "score": 93
+  },
+  {
+    "id": 173,
+    "expected_level": 12,
+    "actual_level": 11,
+    "level_name": "极高",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 92
+  },
+  {
+    "id": 174,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "电商推荐",
+    "factor": "点击率",
+    "score": 83
+  },
+  {
+    "id": 175,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "智能客服",
+    "factor": "CTR",
+    "score": 44
+  },
+  {
+    "id": 176,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "搜索排序",
+    "factor": "点击率",
+    "score": 77
+  },
+  {
+    "id": 177,
+    "expected_level": 12,
+    "actual_level": 12,
+    "level_name": "极高",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 41
+  },
+  {
+    "id": 178,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "搜索排序",
+    "factor": "ROI",
+    "score": 97
+  },
+  {
+    "id": 179,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 100
+  },
+  {
+    "id": 180,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 80
+  },
+  {
+    "id": 181,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "搜索排序",
+    "factor": "复购率",
+    "score": 43
+  },
+  {
+    "id": 182,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "搜索排序",
+    "factor": "满意度",
+    "score": 96
+  },
+  {
+    "id": 183,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "搜索排序",
+    "factor": "点击率",
+    "score": 56
+  },
+  {
+    "id": 184,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "智能客服",
+    "factor": "复购率",
+    "score": 58
+  },
+  {
+    "id": 185,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 75
+  },
+  {
+    "id": 186,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 64
+  },
+  {
+    "id": 187,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 87
+  },
+  {
+    "id": 188,
+    "expected_level": 13,
+    "actual_level": 13,
+    "level_name": "优秀",
+    "scenario": "广告投放",
+    "factor": "CVR",
+    "score": 55
+  },
+  {
+    "id": 189,
+    "expected_level": 14,
+    "actual_level": 14,
+    "level_name": "卓越",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 98
+  },
+  {
+    "id": 190,
+    "expected_level": 14,
+    "actual_level": 14,
+    "level_name": "卓越",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 66
+  },
+  {
+    "id": 191,
+    "expected_level": 14,
+    "actual_level": 14,
+    "level_name": "卓越",
+    "scenario": "广告投放",
+    "factor": "留存率",
+    "score": 75
+  },
+  {
+    "id": 192,
+    "expected_level": 14,
+    "actual_level": 14,
+    "level_name": "卓越",
+    "scenario": "内容推荐",
+    "factor": "满意度",
+    "score": 96
+  },
+  {
+    "id": 193,
+    "expected_level": 14,
+    "actual_level": 14,
+    "level_name": "卓越",
+    "scenario": "智能客服",
+    "factor": "CTR",
+    "score": 61
+  },
+  {
+    "id": 194,
+    "expected_level": 14,
+    "actual_level": 13,
+    "level_name": "卓越",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 58
+  },
+  {
+    "id": 195,
+    "expected_level": 14,
+    "actual_level": 13,
+    "level_name": "卓越",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 76
+  },
+  {
+    "id": 196,
+    "expected_level": 14,
+    "actual_level": 14,
+    "level_name": "卓越",
+    "scenario": "电商推荐",
+    "factor": "满意度",
+    "score": 98
+  },
+  {
+    "id": 197,
+    "expected_level": 14,
+    "actual_level": 14,
+    "level_name": "卓越",
+    "scenario": "内容推荐",
+    "factor": "转化率",
+    "score": 81
+  },
+  {
+    "id": 198,
+    "expected_level": 14,
+    "actual_level": 13,
+    "level_name": "卓越",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 69
+  },
+  {
+    "id": 199,
+    "expected_level": 14,
+    "actual_level": 13,
+    "level_name": "卓越",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 56
+  },
+  {
+    "id": 200,
+    "expected_level": 14,
+    "actual_level": 15,
+    "level_name": "卓越",
+    "scenario": "广告投放",
+    "factor": "转化率",
+    "score": 82
+  },
+  {
+    "id": 201,
+    "expected_level": 15,
+    "actual_level": 14,
+    "level_name": "完美",
+    "scenario": "广告投放",
+    "factor": "NPS",
+    "score": 96
+  },
+  {
+    "id": 202,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "广告投放",
+    "factor": "NPS",
+    "score": 79
+  },
+  {
+    "id": 203,
+    "expected_level": 15,
+    "actual_level": 17,
+    "level_name": "完美",
+    "scenario": "广告投放",
+    "factor": "满意度",
+    "score": 86
+  },
+  {
+    "id": 204,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 69
+  },
+  {
+    "id": 205,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 68
+  },
+  {
+    "id": 206,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 75
+  },
+  {
+    "id": 207,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "智能客服",
+    "factor": "转化率",
+    "score": 91
+  },
+  {
+    "id": 208,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "内容推荐",
+    "factor": "留存率",
+    "score": 41
+  },
+  {
+    "id": 209,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 77
+  },
+  {
+    "id": 210,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "电商推荐",
+    "factor": "留存率",
+    "score": 45
+  },
+  {
+    "id": 211,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 56
+  },
+  {
+    "id": 212,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "搜索排序",
+    "factor": "留存率",
+    "score": 87
+  },
+  {
+    "id": 213,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "电商推荐",
+    "factor": "NPS",
+    "score": 77
+  },
+  {
+    "id": 214,
+    "expected_level": 15,
+    "actual_level": 15,
+    "level_name": "完美",
+    "scenario": "搜索排序",
+    "factor": "ROI",
+    "score": 64
+  },
+  {
+    "id": 215,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "搜索排序",
+    "factor": "留存率",
+    "score": 67
+  },
+  {
+    "id": 216,
+    "expected_level": 16,
+    "actual_level": 18,
+    "level_name": "S-",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 88
+  },
+  {
+    "id": 217,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 83
+  },
+  {
+    "id": 218,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "内容推荐",
+    "factor": "NPS",
+    "score": 59
+  },
+  {
+    "id": 219,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "广告投放",
+    "factor": "CVR",
+    "score": 99
+  },
+  {
+    "id": 220,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "电商推荐",
+    "factor": "点击率",
+    "score": 92
+  },
+  {
+    "id": 221,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "智能客服",
+    "factor": "满意度",
+    "score": 56
+  },
+  {
+    "id": 222,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 43
+  },
+  {
+    "id": 223,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "电商推荐",
+    "factor": "满意度",
+    "score": 60
+  },
+  {
+    "id": 224,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "搜索排序",
+    "factor": "转化率",
+    "score": 76
+  },
+  {
+    "id": 225,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 65
+  },
+  {
+    "id": 226,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "搜索排序",
+    "factor": "满意度",
+    "score": 40
+  },
+  {
+    "id": 227,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 40
+  },
+  {
+    "id": 228,
+    "expected_level": 16,
+    "actual_level": 16,
+    "level_name": "S-",
+    "scenario": "智能客服",
+    "factor": "满意度",
+    "score": 81
+  },
+  {
+    "id": 229,
+    "expected_level": 16,
+    "actual_level": 15,
+    "level_name": "S-",
+    "scenario": "内容推荐",
+    "factor": "CVR",
+    "score": 49
+  },
+  {
+    "id": 230,
+    "expected_level": 17,
+    "actual_level": 16,
+    "level_name": "S",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 94
+  },
+  {
+    "id": 231,
+    "expected_level": 17,
+    "actual_level": 17,
+    "level_name": "S",
+    "scenario": "电商推荐",
+    "factor": "留存率",
+    "score": 96
+  },
+  {
+    "id": 232,
+    "expected_level": 17,
+    "actual_level": 17,
+    "level_name": "S",
+    "scenario": "电商推荐",
+    "factor": "满意度",
+    "score": 85
+  },
+  {
+    "id": 233,
+    "expected_level": 17,
+    "actual_level": 19,
+    "level_name": "S",
+    "scenario": "电商推荐",
+    "factor": "满意度",
+    "score": 82
+  },
+  {
+    "id": 234,
+    "expected_level": 17,
+    "actual_level": 17,
+    "level_name": "S",
+    "scenario": "广告投放",
+    "factor": "满意度",
+    "score": 92
+  },
+  {
+    "id": 235,
+    "expected_level": 17,
+    "actual_level": 17,
+    "level_name": "S",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 49
+  },
+  {
+    "id": 236,
+    "expected_level": 17,
+    "actual_level": 18,
+    "level_name": "S",
+    "scenario": "智能客服",
+    "factor": "复购率",
+    "score": 82
+  },
+  {
+    "id": 237,
+    "expected_level": 17,
+    "actual_level": 17,
+    "level_name": "S",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 90
+  },
+  {
+    "id": 238,
+    "expected_level": 17,
+    "actual_level": 17,
+    "level_name": "S",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 72
+  },
+  {
+    "id": 239,
+    "expected_level": 17,
+    "actual_level": 17,
+    "level_name": "S",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 61
+  },
+  {
+    "id": 240,
+    "expected_level": 17,
+    "actual_level": 16,
+    "level_name": "S",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 62
+  },
+  {
+    "id": 241,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "电商推荐",
+    "factor": "满意度",
+    "score": 94
+  },
+  {
+    "id": 242,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "广告投放",
+    "factor": "留存率",
+    "score": 43
+  },
+  {
+    "id": 243,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 96
+  },
+  {
+    "id": 244,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 50
+  },
+  {
+    "id": 245,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "广告投放",
+    "factor": "ROI",
+    "score": 65
+  },
+  {
+    "id": 246,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "广告投放",
+    "factor": "转化率",
+    "score": 53
+  },
+  {
+    "id": 247,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "搜索排序",
+    "factor": "NPS",
+    "score": 71
+  },
+  {
+    "id": 248,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "广告投放",
+    "factor": "ROI",
+    "score": 68
+  },
+  {
+    "id": 249,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "智能客服",
+    "factor": "转化率",
+    "score": 65
+  },
+  {
+    "id": 250,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "电商推荐",
+    "factor": "转化率",
+    "score": 42
+  },
+  {
+    "id": 251,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 76
+  },
+  {
+    "id": 252,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "内容推荐",
+    "factor": "CVR",
+    "score": 84
+  },
+  {
+    "id": 253,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "智能客服",
+    "factor": "CVR",
+    "score": 95
+  },
+  {
+    "id": 254,
+    "expected_level": 18,
+    "actual_level": 19,
+    "level_name": "S+",
+    "scenario": "电商推荐",
+    "factor": "用户活跃度",
+    "score": 40
+  },
+  {
+    "id": 255,
+    "expected_level": 18,
+    "actual_level": 18,
+    "level_name": "S+",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 63
+  },
+  {
+    "id": 256,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 45
+  },
+  {
+    "id": 257,
+    "expected_level": 19,
+    "actual_level": 20,
+    "level_name": "SS-",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 74
+  },
+  {
+    "id": 258,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "内容推荐",
+    "factor": "NPS",
+    "score": 90
+  },
+  {
+    "id": 259,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 59
+  },
+  {
+    "id": 260,
+    "expected_level": 19,
+    "actual_level": 21,
+    "level_name": "SS-",
+    "scenario": "搜索排序",
+    "factor": "转化率",
+    "score": 56
+  },
+  {
+    "id": 261,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "广告投放",
+    "factor": "满意度",
+    "score": 77
+  },
+  {
+    "id": 262,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "搜索排序",
+    "factor": "转化率",
+    "score": 99
+  },
+  {
+    "id": 263,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "广告投放",
+    "factor": "留存率",
+    "score": 40
+  },
+  {
+    "id": 264,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "广告投放",
+    "factor": "CVR",
+    "score": 52
+  },
+  {
+    "id": 265,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 63
+  },
+  {
+    "id": 266,
+    "expected_level": 19,
+    "actual_level": 19,
+    "level_name": "SS-",
+    "scenario": "内容推荐",
+    "factor": "CVR",
+    "score": 67
+  },
+  {
+    "id": 267,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "内容推荐",
+    "factor": "转化率",
+    "score": 70
+  },
+  {
+    "id": 268,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 98
+  },
+  {
+    "id": 269,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 95
+  },
+  {
+    "id": 270,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "智能客服",
+    "factor": "CTR",
+    "score": 77
+  },
+  {
+    "id": 271,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "内容推荐",
+    "factor": "NPS",
+    "score": 50
+  },
+  {
+    "id": 272,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 55
+  },
+  {
+    "id": 273,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 47
+  },
+  {
+    "id": 274,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 81
+  },
+  {
+    "id": 275,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 87
+  },
+  {
+    "id": 276,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 94
+  },
+  {
+    "id": 277,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 47
+  },
+  {
+    "id": 278,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 61
+  },
+  {
+    "id": 279,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "内容推荐",
+    "factor": "转化率",
+    "score": 75
+  },
+  {
+    "id": 280,
+    "expected_level": 20,
+    "actual_level": 20,
+    "level_name": "SS",
+    "scenario": "电商推荐",
+    "factor": "用户活跃度",
+    "score": 70
+  },
+  {
+    "id": 281,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "内容推荐",
+    "factor": "满意度",
+    "score": 43
+  },
+  {
+    "id": 282,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "搜索排序",
+    "factor": "NPS",
+    "score": 80
+  },
+  {
+    "id": 283,
+    "expected_level": 21,
+    "actual_level": 23,
+    "level_name": "SS+",
+    "scenario": "搜索排序",
+    "factor": "CVR",
+    "score": 73
+  },
+  {
+    "id": 284,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 84
+  },
+  {
+    "id": 285,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "内容推荐",
+    "factor": "满意度",
+    "score": 50
+  },
+  {
+    "id": 286,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "搜索排序",
+    "factor": "满意度",
+    "score": 49
+  },
+  {
+    "id": 287,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 82
+  },
+  {
+    "id": 288,
+    "expected_level": 21,
+    "actual_level": 19,
+    "level_name": "SS+",
+    "scenario": "搜索排序",
+    "factor": "留存率",
+    "score": 97
+  },
+  {
+    "id": 289,
+    "expected_level": 21,
+    "actual_level": 22,
+    "level_name": "SS+",
+    "scenario": "搜索排序",
+    "factor": "NPS",
+    "score": 42
+  },
+  {
+    "id": 290,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "内容推荐",
+    "factor": "NPS",
+    "score": 47
+  },
+  {
+    "id": 291,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 82
+  },
+  {
+    "id": 292,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 90
+  },
+  {
+    "id": 293,
+    "expected_level": 21,
+    "actual_level": 21,
+    "level_name": "SS+",
+    "scenario": "搜索排序",
+    "factor": "CVR",
+    "score": 86
+  },
+  {
+    "id": 294,
+    "expected_level": 21,
+    "actual_level": 23,
+    "level_name": "SS+",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 70
+  },
+  {
+    "id": 295,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 71
+  },
+  {
+    "id": 296,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "搜索排序",
+    "factor": "CVR",
+    "score": 47
+  },
+  {
+    "id": 297,
+    "expected_level": 22,
+    "actual_level": 24,
+    "level_name": "SSS-",
+    "scenario": "广告投放",
+    "factor": "CVR",
+    "score": 87
+  },
+  {
+    "id": 298,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 90
+  },
+  {
+    "id": 299,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 45
+  },
+  {
+    "id": 300,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 70
+  },
+  {
+    "id": 301,
+    "expected_level": 22,
+    "actual_level": 20,
+    "level_name": "SSS-",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 82
+  },
+  {
+    "id": 302,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 86
+  },
+  {
+    "id": 303,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "搜索排序",
+    "factor": "复购率",
+    "score": 70
+  },
+  {
+    "id": 304,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 65
+  },
+  {
+    "id": 305,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "智能客服",
+    "factor": "用户活跃度",
+    "score": 52
+  },
+  {
+    "id": 306,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "电商推荐",
+    "factor": "NPS",
+    "score": 40
+  },
+  {
+    "id": 307,
+    "expected_level": 22,
+    "actual_level": 22,
+    "level_name": "SSS-",
+    "scenario": "内容推荐",
+    "factor": "转化率",
+    "score": 51
+  },
+  {
+    "id": 308,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "智能客服",
+    "factor": "满意度",
+    "score": 57
+  },
+  {
+    "id": 309,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "智能客服",
+    "factor": "用户活跃度",
+    "score": 96
+  },
+  {
+    "id": 310,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "广告投放",
+    "factor": "NPS",
+    "score": 65
+  },
+  {
+    "id": 311,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "广告投放",
+    "factor": "点击率",
+    "score": 52
+  },
+  {
+    "id": 312,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "电商推荐",
+    "factor": "留存率",
+    "score": 100
+  },
+  {
+    "id": 313,
+    "expected_level": 23,
+    "actual_level": 22,
+    "level_name": "SSS",
+    "scenario": "广告投放",
+    "factor": "NPS",
+    "score": 64
+  },
+  {
+    "id": 314,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 47
+  },
+  {
+    "id": 315,
+    "expected_level": 23,
+    "actual_level": 24,
+    "level_name": "SSS",
+    "scenario": "搜索排序",
+    "factor": "复购率",
+    "score": 54
+  },
+  {
+    "id": 316,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 83
+  },
+  {
+    "id": 317,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "广告投放",
+    "factor": "满意度",
+    "score": 71
+  },
+  {
+    "id": 318,
+    "expected_level": 23,
+    "actual_level": 22,
+    "level_name": "SSS",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 74
+  },
+  {
+    "id": 319,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "智能客服",
+    "factor": "满意度",
+    "score": 99
+  },
+  {
+    "id": 320,
+    "expected_level": 23,
+    "actual_level": 23,
+    "level_name": "SSS",
+    "scenario": "搜索排序",
+    "factor": "点击率",
+    "score": 73
+  },
+  {
+    "id": 321,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 50
+  },
+  {
+    "id": 322,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 44
+  },
+  {
+    "id": 323,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 84
+  },
+  {
+    "id": 324,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 79
+  },
+  {
+    "id": 325,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "搜索排序",
+    "factor": "点击率",
+    "score": 74
+  },
+  {
+    "id": 326,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 41
+  },
+  {
+    "id": 327,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "电商推荐",
+    "factor": "转化率",
+    "score": 53
+  },
+  {
+    "id": 328,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 62
+  },
+  {
+    "id": 329,
+    "expected_level": 24,
+    "actual_level": 23,
+    "level_name": "SSS+",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 73
+  },
+  {
+    "id": 330,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 96
+  },
+  {
+    "id": 331,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 91
+  },
+  {
+    "id": 332,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "智能客服",
+    "factor": "CVR",
+    "score": 41
+  },
+  {
+    "id": 333,
+    "expected_level": 24,
+    "actual_level": 24,
+    "level_name": "SSS+",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 65
+  },
+  {
+    "id": 334,
+    "expected_level": 24,
+    "actual_level": 26,
+    "level_name": "SSS+",
+    "scenario": "搜索排序",
+    "factor": "复购率",
+    "score": 81
+  },
+  {
+    "id": 335,
+    "expected_level": 25,
+    "actual_level": 25,
+    "level_name": "传奇-",
+    "scenario": "广告投放",
+    "factor": "NPS",
+    "score": 85
+  },
+  {
+    "id": 336,
+    "expected_level": 25,
+    "actual_level": 25,
+    "level_name": "传奇-",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 99
+  },
+  {
+    "id": 337,
+    "expected_level": 25,
+    "actual_level": 25,
+    "level_name": "传奇-",
+    "scenario": "内容推荐",
+    "factor": "满意度",
+    "score": 49
+  },
+  {
+    "id": 338,
+    "expected_level": 25,
+    "actual_level": 25,
+    "level_name": "传奇-",
+    "scenario": "电商推荐",
+    "factor": "满意度",
+    "score": 88
+  },
+  {
+    "id": 339,
+    "expected_level": 25,
+    "actual_level": 27,
+    "level_name": "传奇-",
+    "scenario": "电商推荐",
+    "factor": "转化率",
+    "score": 61
+  },
+  {
+    "id": 340,
+    "expected_level": 25,
+    "actual_level": 23,
+    "level_name": "传奇-",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 87
+  },
+  {
+    "id": 341,
+    "expected_level": 25,
+    "actual_level": 26,
+    "level_name": "传奇-",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 45
+  },
+  {
+    "id": 342,
+    "expected_level": 25,
+    "actual_level": 25,
+    "level_name": "传奇-",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 50
+  },
+  {
+    "id": 343,
+    "expected_level": 25,
+    "actual_level": 24,
+    "level_name": "传奇-",
+    "scenario": "搜索排序",
+    "factor": "ROI",
+    "score": 80
+  },
+  {
+    "id": 344,
+    "expected_level": 25,
+    "actual_level": 25,
+    "level_name": "传奇-",
+    "scenario": "搜索排序",
+    "factor": "ROI",
+    "score": 70
+  },
+  {
+    "id": 345,
+    "expected_level": 25,
+    "actual_level": 25,
+    "level_name": "传奇-",
+    "scenario": "广告投放",
+    "factor": "NPS",
+    "score": 59
+  },
+  {
+    "id": 346,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "电商推荐",
+    "factor": "留存率",
+    "score": 90
+  },
+  {
+    "id": 347,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 92
+  },
+  {
+    "id": 348,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "搜索排序",
+    "factor": "点击率",
+    "score": 53
+  },
+  {
+    "id": 349,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "智能客服",
+    "factor": "点击率",
+    "score": 84
+  },
+  {
+    "id": 350,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "智能客服",
+    "factor": "转化率",
+    "score": 80
+  },
+  {
+    "id": 351,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 94
+  },
+  {
+    "id": 352,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "搜索排序",
+    "factor": "复购率",
+    "score": 45
+  },
+  {
+    "id": 353,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 48
+  },
+  {
+    "id": 354,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 58
+  },
+  {
+    "id": 355,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 68
+  },
+  {
+    "id": 356,
+    "expected_level": 26,
+    "actual_level": 26,
+    "level_name": "传奇",
+    "scenario": "广告投放",
+    "factor": "CVR",
+    "score": 57
+  },
+  {
+    "id": 357,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 65
+  },
+  {
+    "id": 358,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "电商推荐",
+    "factor": "点击率",
+    "score": 86
+  },
+  {
+    "id": 359,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "广告投放",
+    "factor": "CVR",
+    "score": 45
+  },
+  {
+    "id": 360,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 67
+  },
+  {
+    "id": 361,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "内容推荐",
+    "factor": "用户活跃度",
+    "score": 72
+  },
+  {
+    "id": 362,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 64
+  },
+  {
+    "id": 363,
+    "expected_level": 27,
+    "actual_level": 28,
+    "level_name": "传奇+",
+    "scenario": "广告投放",
+    "factor": "CTR",
+    "score": 93
+  },
+  {
+    "id": 364,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 44
+  },
+  {
+    "id": 365,
+    "expected_level": 27,
+    "actual_level": 28,
+    "level_name": "传奇+",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 85
+  },
+  {
+    "id": 366,
+    "expected_level": 27,
+    "actual_level": 25,
+    "level_name": "传奇+",
+    "scenario": "电商推荐",
+    "factor": "复购率",
+    "score": 51
+  },
+  {
+    "id": 367,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "搜索排序",
+    "factor": "留存率",
+    "score": 80
+  },
+  {
+    "id": 368,
+    "expected_level": 27,
+    "actual_level": 28,
+    "level_name": "传奇+",
+    "scenario": "内容推荐",
+    "factor": "留存率",
+    "score": 64
+  },
+  {
+    "id": 369,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "电商推荐",
+    "factor": "NPS",
+    "score": 41
+  },
+  {
+    "id": 370,
+    "expected_level": 27,
+    "actual_level": 27,
+    "level_name": "传奇+",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 87
+  },
+  {
+    "id": 371,
+    "expected_level": 28,
+    "actual_level": 28,
+    "level_name": "���话",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 64
+  },
+  {
+    "id": 372,
+    "expected_level": 28,
+    "actual_level": 29,
+    "level_name": "���话",
+    "scenario": "内容推荐",
+    "factor": "CTR",
+    "score": 97
+  },
+  {
+    "id": 373,
+    "expected_level": 28,
+    "actual_level": 28,
+    "level_name": "���话",
+    "scenario": "搜索排序",
+    "factor": "NPS",
+    "score": 75
+  },
+  {
+    "id": 374,
+    "expected_level": 28,
+    "actual_level": 27,
+    "level_name": "���话",
+    "scenario": "电商推荐",
+    "factor": "ROI",
+    "score": 50
+  },
+  {
+    "id": 375,
+    "expected_level": 28,
+    "actual_level": 29,
+    "level_name": "���话",
+    "scenario": "电商推荐",
+    "factor": "CVR",
+    "score": 94
+  },
+  {
+    "id": 376,
+    "expected_level": 28,
+    "actual_level": 28,
+    "level_name": "���话",
+    "scenario": "内容推荐",
+    "factor": "ROI",
+    "score": 57
+  },
+  {
+    "id": 377,
+    "expected_level": 28,
+    "actual_level": 28,
+    "level_name": "���话",
+    "scenario": "智能客服",
+    "factor": "转化率",
+    "score": 86
+  },
+  {
+    "id": 378,
+    "expected_level": 28,
+    "actual_level": 28,
+    "level_name": "���话",
+    "scenario": "广告投放",
+    "factor": "NPS",
+    "score": 46
+  },
+  {
+    "id": 379,
+    "expected_level": 28,
+    "actual_level": 28,
+    "level_name": "���话",
+    "scenario": "智能客服",
+    "factor": "复购率",
+    "score": 90
+  },
+  {
+    "id": 380,
+    "expected_level": 28,
+    "actual_level": 28,
+    "level_name": "���话",
+    "scenario": "搜索排序",
+    "factor": "留存率",
+    "score": 91
+  },
+  {
+    "id": 381,
+    "expected_level": 28,
+    "actual_level": 26,
+    "level_name": "���话",
+    "scenario": "广告投放",
+    "factor": "转化率",
+    "score": 81
+  },
+  {
+    "id": 382,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "搜索排序",
+    "factor": "用户活跃度",
+    "score": 95
+  },
+  {
+    "id": 383,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "智能客服",
+    "factor": "ROI",
+    "score": 64
+  },
+  {
+    "id": 384,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "广告投放",
+    "factor": "用户活跃度",
+    "score": 70
+  },
+  {
+    "id": 385,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "广告投放",
+    "factor": "复购率",
+    "score": 72
+  },
+  {
+    "id": 386,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "内容推荐",
+    "factor": "复购率",
+    "score": 72
+  },
+  {
+    "id": 387,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "智能客服",
+    "factor": "NPS",
+    "score": 62
+  },
+  {
+    "id": 388,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "内容推荐",
+    "factor": "点击率",
+    "score": 64
+  },
+  {
+    "id": 389,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "搜索排序",
+    "factor": "NPS",
+    "score": 89
+  },
+  {
+    "id": 390,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "智能客服",
+    "factor": "留存率",
+    "score": 41
+  },
+  {
+    "id": 391,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "广告投放",
+    "factor": "ROI",
+    "score": 72
+  },
+  {
+    "id": 392,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "搜索排序",
+    "factor": "CTR",
+    "score": 81
+  },
+  {
+    "id": 393,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "智能客服",
+    "factor": "CTR",
+    "score": 96
+  },
+  {
+    "id": 394,
+    "expected_level": 29,
+    "actual_level": 29,
+    "level_name": "巅峰",
+    "scenario": "电商推荐",
+    "factor": "CTR",
+    "score": 66
+  }
+]
