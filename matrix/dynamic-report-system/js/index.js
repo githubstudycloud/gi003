@@ -121,6 +121,12 @@ function loadSampleData(dimensions = 10) {
             data = generateDynamicData(10, count);
             break;
 
+        case 15:
+            count = 300;
+            description = '15维矩阵 (300条) - 高质量';
+            data = generateHighQualityData(15, count);
+            break;
+
         case 20:
             count = 206;
             description = '20维矩阵 (206条)';
@@ -184,6 +190,56 @@ function generateDynamicData(dimensions, count) {
                 scenario: scenarios[Math.floor(Math.random() * scenarios.length)],
                 factor: factors[Math.floor(Math.random() * factors.length)],
                 score: Math.floor(Math.random() * 40) + 60,
+                timestamp: `2025-11-25 ${Math.floor(Math.random() * 13) + 8}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`
+            });
+        }
+    }
+
+    // 打乱数据顺序
+    for (let i = data.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [data[i], data[j]] = [data[j], data[i]];
+    }
+
+    return data;
+}
+
+// 生成高质量数据 (预测准确率95%+，减少0值)
+function generateHighQualityData(dimensions, count) {
+    const levelNames = generateLevelNames(dimensions);
+    const scenarios = ['电商推荐', '内容推荐', '搜索排序', '广告投放', '智能客服', 'AI助手', '个性化推送'];
+    const factors = ['用户活跃度', '点击率', '转化率', '留存率', 'ROI', 'CTR', 'CVR', '满意度', 'NPS', '复购率', '参与度', '响应率'];
+
+    const data = [];
+
+    // 为每个等级生成数据,确保覆盖所有等级
+    const samplesPerLevel = Math.floor(count / dimensions);
+    const extraSamples = count % dimensions;
+
+    let id = 1;
+    for (let level = 0; level < dimensions; level++) {
+        const numSamples = samplesPerLevel + (level < extraSamples ? 1 : 0);
+
+        for (let j = 0; j < numSamples; j++) {
+            // 95% 概率预测正确
+            let actual;
+            const rand = Math.random();
+            if (rand < 0.95) {
+                actual = level;
+            } else {
+                // 5%预测错误,只预测为相邻等级(±1)
+                const offset = Math.random() < 0.5 ? -1 : 1;
+                actual = Math.max(0, Math.min(dimensions - 1, level + offset));
+            }
+
+            data.push({
+                id: id++,
+                expected_level: level,
+                actual_level: actual,
+                level_name: levelNames[level],
+                scenario: scenarios[Math.floor(Math.random() * scenarios.length)],
+                factor: factors[Math.floor(Math.random() * factors.length)],
+                score: Math.floor(Math.random() * 30) + 70, // 70-100分
                 timestamp: `2025-11-25 ${Math.floor(Math.random() * 13) + 8}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`
             });
         }
