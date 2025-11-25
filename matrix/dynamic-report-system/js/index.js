@@ -204,46 +204,80 @@ function generateDynamicData(dimensions, count) {
     return data;
 }
 
-// 生成高质量数据 (预测准确率95%+，减少0值)
+// 生成高质量数据 (矩阵单元格0值尽可能少)
 function generateHighQualityData(dimensions, count) {
     const levelNames = generateLevelNames(dimensions);
     const scenarios = ['电商推荐', '内容推荐', '搜索排序', '广告投放', '智能客服', 'AI助手', '个性化推送'];
     const factors = ['用户活跃度', '点击率', '转化率', '留存率', 'ROI', 'CTR', 'CVR', '满意度', 'NPS', '复购率', '参与度', '响应率'];
 
     const data = [];
-
-    // 为每个等级生成数据,确保覆盖所有等级
-    const samplesPerLevel = Math.floor(count / dimensions);
-    const extraSamples = count % dimensions;
-
     let id = 1;
-    for (let level = 0; level < dimensions; level++) {
-        const numSamples = samplesPerLevel + (level < extraSamples ? 1 : 0);
 
-        for (let j = 0; j < numSamples; j++) {
-            // 95% 概率预测正确
-            let actual;
-            const rand = Math.random();
-            if (rand < 0.95) {
-                actual = level;
-            } else {
-                // 5%预测错误,只预测为相邻等级(±1)
-                const offset = Math.random() < 0.5 ? -1 : 1;
-                actual = Math.max(0, Math.min(dimensions - 1, level + offset));
-            }
+    // 计算矩阵单元格总数
+    const totalCells = dimensions * dimensions;
 
+    // 策略：首先确保每个单元格至少有1条数据
+    // 为每个(expected, actual)组合至少分配1条数据
+    const matrixDistribution = [];
+    for (let expected = 0; expected < dimensions; expected++) {
+        for (let actual = 0; actual < dimensions; actual++) {
+            matrixDistribution.push({ expected, actual, count: 1 });
+        }
+    }
+
+    // 剩余数据量
+    let remainingCount = count - totalCells;
+
+    // 将剩余数据按照合理的分布策略分配
+    // 对角线(预测正确)分配更多: 60%
+    // 相邻对角线分配中等: 30%
+    // 其他位置分配较少: 10%
+
+    const diagonalCount = Math.floor(remainingCount * 0.60);
+    const adjacentCount = Math.floor(remainingCount * 0.30);
+    const otherCount = remainingCount - diagonalCount - adjacentCount;
+
+    // 分配对角线数据
+    for (let i = 0; i < dimensions; i++) {
+        const cell = matrixDistribution.find(c => c.expected === i && c.actual === i);
+        cell.count += Math.floor(diagonalCount / dimensions);
+    }
+
+    // 分配相邻对角线数据
+    let adjacentCells = [];
+    for (let i = 0; i < dimensions; i++) {
+        if (i > 0) adjacentCells.push({ expected: i, actual: i - 1 });
+        if (i < dimensions - 1) adjacentCells.push({ expected: i, actual: i + 1 });
+    }
+    const perAdjacentCell = Math.floor(adjacentCount / adjacentCells.length);
+    adjacentCells.forEach(pos => {
+        const cell = matrixDistribution.find(c => c.expected === pos.expected && c.actual === pos.actual);
+        cell.count += perAdjacentCell;
+    });
+
+    // 剩余数据随机分配到其他单元格
+    let distributed = 0;
+    for (let i = 0; i < otherCount; i++) {
+        const randomCell = matrixDistribution[Math.floor(Math.random() * matrixDistribution.length)];
+        randomCell.count++;
+        distributed++;
+    }
+
+    // 根据分配方案生成实际数据
+    matrixDistribution.forEach(cell => {
+        for (let i = 0; i < cell.count; i++) {
             data.push({
                 id: id++,
-                expected_level: level,
-                actual_level: actual,
-                level_name: levelNames[level],
+                expected_level: cell.expected,
+                actual_level: cell.actual,
+                level_name: levelNames[cell.expected],
                 scenario: scenarios[Math.floor(Math.random() * scenarios.length)],
                 factor: factors[Math.floor(Math.random() * factors.length)],
-                score: Math.floor(Math.random() * 30) + 70, // 70-100分
+                score: Math.floor(Math.random() * 30) + 70,
                 timestamp: `2025-11-25 ${Math.floor(Math.random() * 13) + 8}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`
             });
         }
-    }
+    });
 
     // 打乱数据顺序
     for (let i = data.length - 1; i > 0; i--) {
