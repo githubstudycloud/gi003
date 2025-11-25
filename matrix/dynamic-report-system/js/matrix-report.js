@@ -184,7 +184,7 @@ function renderMatrix() {
     // 表头
     html += '<thead><tr>';
     html += '<th class="label-header">显示说明</th>';
-    html += '<th class="value-header">值</th>';
+    html += '<th class="value-header">实际\\预测</th>';
     for (let i = 0; i < matrixSize; i++) {
         html += `<th>${i}</th>`;
     }
