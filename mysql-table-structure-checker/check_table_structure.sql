@@ -1,218 +1,153 @@
 -- ========================================
 -- MySQL 5.7 表结构检查和修复工具
--- 用于检查以特定前缀开头的表是否缺少字段
 -- ========================================
-
--- 使用说明：
--- 1. 修改数据库名称
--- 2. 修改表前缀（默认为 'aa'）
--- 3. 修改标准表名（默认为 'aa_example'）
--- 4. 依次执行以下 SQL 语句
-
-USE your_database_name;  -- 请修改为实际的数据库名
+-- 使用方法：只需修改下方的 3 个配置变量，然后执行全部 SQL
 
 -- ========================================
--- 步骤 1: 查找所有以指定前缀开头的表
+-- 【配置区】只需修改这里
 -- ========================================
+SET @db_name = 'your_database_name';  -- 数据库名
+SET @table_prefix = 'aa';              -- 表前缀（不含%）
+SET @standard_table = 'aa_example';    -- 标准表名（字段完整的表）
+
+-- 切换数据库（如果变量方式不生效，手动修改这行）
+-- USE your_database_name;
+
+-- ========================================
+-- 步骤 1: 查看所有匹配前缀的表
+-- ========================================
+SELECT '===== 步骤1: 所有匹配的表 =====' AS '';
+
+SET @sql = CONCAT('
 SELECT
-    TABLE_NAME as '表名',
-    TABLE_TYPE as '表类型',
-    ENGINE as '引擎',
-    TABLE_ROWS as '行数',
-    CREATE_TIME as '创建时间'
-FROM
-    information_schema.TABLES
-WHERE
-    TABLE_SCHEMA = DATABASE()
-    AND TABLE_NAME LIKE 'aa%'  -- 修改前缀
-ORDER BY
-    TABLE_NAME;
+    TABLE_NAME AS 表名,
+    ENGINE AS 引擎,
+    TABLE_ROWS AS 行数,
+    CREATE_TIME AS 创建时间
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = ''', @db_name, '''
+    AND TABLE_NAME LIKE ''', @table_prefix, '%''
+ORDER BY TABLE_NAME');
 
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 -- ========================================
--- 步骤 2: 获取标准表（aa_example）的所有字段信息
+-- 步骤 2: 查看标准表的字段结构
 -- ========================================
+SELECT '===== 步骤2: 标准表字段结构 =====' AS '';
+
+SET @sql = CONCAT('
 SELECT
-    COLUMN_NAME as '字段名',
-    COLUMN_TYPE as '字段类型',
-    IS_NULLABLE as '可为空',
-    COLUMN_DEFAULT as '默认值',
-    COLUMN_COMMENT as '注释',
-    ORDINAL_POSITION as '位置'
-FROM
-    information_schema.COLUMNS
-WHERE
-    TABLE_SCHEMA = DATABASE()
-    AND TABLE_NAME = 'aa_example'  -- 标准表名
-ORDER BY
-    ORDINAL_POSITION;
+    COLUMN_NAME AS 字段名,
+    COLUMN_TYPE AS 类型,
+    IS_NULLABLE AS 可空,
+    COLUMN_DEFAULT AS 默认值,
+    COLUMN_COMMENT AS 注释
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = ''', @db_name, '''
+    AND TABLE_NAME = ''', @standard_table, '''
+ORDER BY ORDINAL_POSITION');
 
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 -- ========================================
--- 步骤 3: 对比所有以 aa 开头的表，找出缺少的字段
+-- 步骤 3: 统计每个表缺少的字段数量
 -- ========================================
+SELECT '===== 步骤3: 缺失字段统计 =====' AS '';
+
+SET @sql = CONCAT('
 SELECT
-    t.TABLE_NAME as '表名',
-    ref.COLUMN_NAME as '缺少的字段',
-    ref.COLUMN_TYPE as '字段类型',
-    ref.IS_NULLABLE as '可为空',
-    ref.COLUMN_DEFAULT as '默认值',
-    ref.COLUMN_COMMENT as '注释',
-    ref.ORDINAL_POSITION as '标准位置'
-FROM
-    information_schema.TABLES t
-CROSS JOIN
-    information_schema.COLUMNS ref
-LEFT JOIN
-    information_schema.COLUMNS exist
-    ON exist.TABLE_SCHEMA = t.TABLE_SCHEMA
+    t.TABLE_NAME AS 表名,
+    COUNT(*) AS 缺少字段数
+FROM information_schema.TABLES t
+CROSS JOIN information_schema.COLUMNS ref
+LEFT JOIN information_schema.COLUMNS exist
+    ON exist.TABLE_SCHEMA = ''', @db_name, '''
     AND exist.TABLE_NAME = t.TABLE_NAME
     AND exist.COLUMN_NAME = ref.COLUMN_NAME
-WHERE
-    t.TABLE_SCHEMA = DATABASE()
-    AND t.TABLE_NAME LIKE 'aa%'
-    AND t.TABLE_NAME != 'aa_example'
-    AND ref.TABLE_SCHEMA = DATABASE()
-    AND ref.TABLE_NAME = 'aa_example'
+WHERE t.TABLE_SCHEMA = ''', @db_name, '''
+    AND t.TABLE_NAME LIKE ''', @table_prefix, '%''
+    AND t.TABLE_NAME != ''', @standard_table, '''
+    AND ref.TABLE_SCHEMA = ''', @db_name, '''
+    AND ref.TABLE_NAME = ''', @standard_table, '''
     AND exist.COLUMN_NAME IS NULL
-ORDER BY
-    t.TABLE_NAME, ref.ORDINAL_POSITION;
+GROUP BY t.TABLE_NAME
+HAVING COUNT(*) > 0
+ORDER BY COUNT(*) DESC');
 
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 -- ========================================
--- 步骤 4: 统计每个表缺少的字段数量
+-- 步骤 4: 查看缺失字段详情
 -- ========================================
+SELECT '===== 步骤4: 缺失字段详情 =====' AS '';
+
+SET @sql = CONCAT('
 SELECT
-    t.TABLE_NAME as '表名',
-    COUNT(ref.COLUMN_NAME) as '缺少字段数量'
-FROM
-    information_schema.TABLES t
-CROSS JOIN
-    information_schema.COLUMNS ref
-LEFT JOIN
-    information_schema.COLUMNS exist
-    ON exist.TABLE_SCHEMA = t.TABLE_SCHEMA
+    t.TABLE_NAME AS 表名,
+    ref.COLUMN_NAME AS 缺少字段,
+    ref.COLUMN_TYPE AS 类型,
+    ref.IS_NULLABLE AS 可空,
+    ref.COLUMN_DEFAULT AS 默认值
+FROM information_schema.TABLES t
+CROSS JOIN information_schema.COLUMNS ref
+LEFT JOIN information_schema.COLUMNS exist
+    ON exist.TABLE_SCHEMA = ''', @db_name, '''
     AND exist.TABLE_NAME = t.TABLE_NAME
     AND exist.COLUMN_NAME = ref.COLUMN_NAME
-WHERE
-    t.TABLE_SCHEMA = DATABASE()
-    AND t.TABLE_NAME LIKE 'aa%'
-    AND t.TABLE_NAME != 'aa_example'
-    AND ref.TABLE_SCHEMA = DATABASE()
-    AND ref.TABLE_NAME = 'aa_example'
+WHERE t.TABLE_SCHEMA = ''', @db_name, '''
+    AND t.TABLE_NAME LIKE ''', @table_prefix, '%''
+    AND t.TABLE_NAME != ''', @standard_table, '''
+    AND ref.TABLE_SCHEMA = ''', @db_name, '''
+    AND ref.TABLE_NAME = ''', @standard_table, '''
     AND exist.COLUMN_NAME IS NULL
-GROUP BY
-    t.TABLE_NAME
-HAVING
-    COUNT(ref.COLUMN_NAME) > 0
-ORDER BY
-    COUNT(ref.COLUMN_NAME) DESC, t.TABLE_NAME;
+ORDER BY t.TABLE_NAME, ref.ORDINAL_POSITION');
 
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 -- ========================================
--- 步骤 5: 查找某个特定表缺少哪些字段（示例）
+-- 步骤 5: 生成修复 SQL（直接可执行）
 -- ========================================
--- 将 'aa_test' 替换为实际要检查的表名
-SELECT
-    ref.COLUMN_NAME as '缺少的字段',
-    ref.COLUMN_TYPE as '字段类型',
-    ref.IS_NULLABLE as '可为空',
-    ref.COLUMN_DEFAULT as '默认值',
-    ref.COLUMN_COMMENT as '注释'
-FROM
-    information_schema.COLUMNS ref
-LEFT JOIN
-    information_schema.COLUMNS exist
-    ON exist.TABLE_SCHEMA = DATABASE()
-    AND exist.TABLE_NAME = 'aa_test'  -- 要检查的表名
-    AND exist.COLUMN_NAME = ref.COLUMN_NAME
-WHERE
-    ref.TABLE_SCHEMA = DATABASE()
-    AND ref.TABLE_NAME = 'aa_example'
-    AND exist.COLUMN_NAME IS NULL
-ORDER BY
-    ref.ORDINAL_POSITION;
+SELECT '===== 步骤5: 修复SQL语句 =====' AS '';
 
-
--- ========================================
--- 步骤 6: 生成所有缺失字段的 ALTER TABLE 修复语句
--- ========================================
-SELECT
-    CONCAT(
-        'ALTER TABLE `', t.TABLE_NAME, '` ADD COLUMN `', ref.COLUMN_NAME, '` ',
-        ref.COLUMN_TYPE,
-        IF(ref.IS_NULLABLE = 'NO', ' NOT NULL', ' NULL'),
-        IFNULL(CONCAT(' DEFAULT ',
-            IF(ref.DATA_TYPE IN ('varchar', 'char', 'text', 'date', 'datetime', 'timestamp', 'time'),
-                CONCAT("'", ref.COLUMN_DEFAULT, "'"),
-                ref.COLUMN_DEFAULT)
-        ), ''),
-        IF(ref.COLUMN_COMMENT != '', CONCAT(" COMMENT '", ref.COLUMN_COMMENT, "'"), ''),
-        ';'
-    ) as 'ALTER TABLE 语句'
-FROM
-    information_schema.TABLES t
-CROSS JOIN
-    information_schema.COLUMNS ref
-LEFT JOIN
-    information_schema.COLUMNS exist
-    ON exist.TABLE_SCHEMA = t.TABLE_SCHEMA
+SET @sql = CONCAT('
+SELECT CONCAT(
+    ''ALTER TABLE `'', t.TABLE_NAME, ''` ADD COLUMN `'', ref.COLUMN_NAME, ''` '',
+    ref.COLUMN_TYPE,
+    IF(ref.IS_NULLABLE = ''NO'', '' NOT NULL'', ''''),
+    CASE
+        WHEN ref.COLUMN_DEFAULT IS NULL THEN ''''
+        WHEN ref.DATA_TYPE IN (''int'', ''bigint'', ''tinyint'', ''smallint'', ''decimal'', ''float'', ''double'')
+            THEN CONCAT('' DEFAULT '', ref.COLUMN_DEFAULT)
+        ELSE CONCAT('' DEFAULT \\'''', ref.COLUMN_DEFAULT, ''\\'''')
+    END,
+    IF(ref.COLUMN_COMMENT != '''', CONCAT('' COMMENT \\'''', ref.COLUMN_COMMENT, ''\\''''), ''''),
+    '';''
+) AS repair_sql
+FROM information_schema.TABLES t
+CROSS JOIN information_schema.COLUMNS ref
+LEFT JOIN information_schema.COLUMNS exist
+    ON exist.TABLE_SCHEMA = ''', @db_name, '''
     AND exist.TABLE_NAME = t.TABLE_NAME
     AND exist.COLUMN_NAME = ref.COLUMN_NAME
-WHERE
-    t.TABLE_SCHEMA = DATABASE()
-    AND t.TABLE_NAME LIKE 'aa%'
-    AND t.TABLE_NAME != 'aa_example'
-    AND ref.TABLE_SCHEMA = DATABASE()
-    AND ref.TABLE_NAME = 'aa_example'
+WHERE t.TABLE_SCHEMA = ''', @db_name, '''
+    AND t.TABLE_NAME LIKE ''', @table_prefix, '%''
+    AND t.TABLE_NAME != ''', @standard_table, '''
+    AND ref.TABLE_SCHEMA = ''', @db_name, '''
+    AND ref.TABLE_NAME = ''', @standard_table, '''
     AND exist.COLUMN_NAME IS NULL
-ORDER BY
-    t.TABLE_NAME, ref.ORDINAL_POSITION;
+ORDER BY t.TABLE_NAME, ref.ORDINAL_POSITION');
 
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
--- ========================================
--- 步骤 7: 生成带有字段位置的 ALTER TABLE 修复语句（推荐使用）
--- 这个版本会将字段添加到正确的位置
--- ========================================
-SELECT
-    CONCAT(
-        'ALTER TABLE `', t.TABLE_NAME, '` ADD COLUMN `', ref.COLUMN_NAME, '` ',
-        ref.COLUMN_TYPE,
-        IF(ref.IS_NULLABLE = 'NO', ' NOT NULL', ' NULL'),
-        IFNULL(CONCAT(' DEFAULT ',
-            IF(ref.DATA_TYPE IN ('varchar', 'char', 'text', 'date', 'datetime', 'timestamp', 'time'),
-                CONCAT("'", ref.COLUMN_DEFAULT, "'"),
-                ref.COLUMN_DEFAULT)
-        ), ''),
-        IF(ref.COLUMN_COMMENT != '', CONCAT(" COMMENT '", ref.COLUMN_COMMENT, "'"), ''),
-        -- 添加字段位置信息
-        IF(ref.ORDINAL_POSITION = 1,
-            ' FIRST',
-            CONCAT(' AFTER `', (
-                SELECT COLUMN_NAME
-                FROM information_schema.COLUMNS
-                WHERE TABLE_SCHEMA = DATABASE()
-                    AND TABLE_NAME = 'aa_example'
-                    AND ORDINAL_POSITION = ref.ORDINAL_POSITION - 1
-            ), '`')
-        ),
-        ';'
-    ) as 'ALTER TABLE 语句'
-FROM
-    information_schema.TABLES t
-CROSS JOIN
-    information_schema.COLUMNS ref
-LEFT JOIN
-    information_schema.COLUMNS exist
-    ON exist.TABLE_SCHEMA = t.TABLE_SCHEMA
-    AND exist.TABLE_NAME = t.TABLE_NAME
-    AND exist.COLUMN_NAME = ref.COLUMN_NAME
-WHERE
-    t.TABLE_SCHEMA = DATABASE()
-    AND t.TABLE_NAME LIKE 'aa%'
-    AND t.TABLE_NAME != 'aa_example'
-    AND ref.TABLE_SCHEMA = DATABASE()
-    AND ref.TABLE_NAME = 'aa_example'
-    AND exist.COLUMN_NAME IS NULL
-ORDER BY
-    t.TABLE_NAME, ref.ORDINAL_POSITION;
+SELECT '===== 完成：复制上方SQL执行修复 =====' AS '';
