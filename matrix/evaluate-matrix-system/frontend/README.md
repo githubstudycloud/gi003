@@ -1,19 +1,22 @@
-# 混淆矩阵评估系统 - 前端文档 V1.1
+# 混淆矩阵评估系统 - 前端文档 V1.4
 
 ## 目录
 
 1. [系统概述](#系统概述)
-2. [v1.1更新内容](#v11更新内容)
-3. [技术架构](#技术架构)
-4. [目录结构](#目录结构)
-5. [核心功能](#核心功能)
-6. [组件说明](#组件说明)
-7. [Mock模式](#mock模式)
-8. [API接口](#api接口)
-9. [安装与运行](#安装与运行)
-10. [配置说明](#配置说明)
-11. [开发指南](#开发指南)
-12. [版本计划](#版本计划)
+2. [快速开始](#快速开始)
+3. [版本更新](#版本更新)
+4. [技术架构](#技术架构)
+5. [目录结构](#目录结构)
+6. [文件依赖关系](#文件依赖关系)
+7. [核心功能](#核心功能)
+8. [组件说明](#组件说明)
+9. [工具模块](#工具模块)
+10. [Mock模式](#mock模式)
+11. [API接口](#api接口)
+12. [安装与运行](#安装与运行)
+13. [配置说明](#配置说明)
+14. [开发指南](#开发指南)
+15. [版本计划](#版本计划)
 
 ---
 
@@ -24,10 +27,59 @@
 - **多用例管理**：一个报告可包含多个测试用例，通过Tab页切换
 - **双矩阵策略**：完整矩阵(正方形)和稀疏矩阵(仅显示出现的值)
 - **核心指标统计**：准确率、精准率、召回率自动计算
-- **详细指标展示**：最高/最低精准率、召回率 (v1.1新增)
+- **详细指标展示**：最高/最低精准率、召回率
 - **交互式查看**：点击单元格/合计行查看详细数据
-- **无效数据过滤**：支持过滤负数和小于指定值的数据 (v1.1新增)
+- **无效数据过滤**：支持过滤负数和小于指定值的数据
 - **前端独立调试**：完整的Mock数据支持
+- **可移植计算模块**：独立的计算工具，可复用到其他项目 (v1.4新增)
+- **调试面板**：内置调试功能，方便开发排查 (v1.4新增)
+
+---
+
+## 快速开始
+
+```bash
+# 1. 进入前端目录
+cd matrix/evaluate-matrix-system/frontend
+
+# 2. 安装依赖（使用 Vite 4.x，无原生依赖）
+npm install
+
+# 3. 启动开发服务器
+npm run dev
+
+# 4. 访问
+# 打开浏览器访问 http://localhost:3000
+```
+
+**注意**：本项目使用 Vite 4.x + Rollup 3.x，不需要原生二进制模块，内网环境可直接使用。
+
+---
+
+## 版本更新
+
+### V1.4.0 (当前版本)
+- ✅ 抽取可移植的计算工具模块 (`src/utils/matrixCalculator.js`)
+- ✅ 新增矩阵计算详解文档
+- ✅ 新增调试面板和日志功能
+- ✅ 代码注释优化，便于移植
+
+### V1.3.0
+- ✅ 降级 Vite 到 4.x 版本（解决原生依赖问题）
+- ✅ 新增原生依赖说明文档
+- ✅ 新增后端开发者指南
+
+### V1.2.0
+- ✅ 混淆矩阵表格改用 el-table 实现
+- ✅ 新增数据计算逻辑文档
+
+### V1.1.0
+- ✅ 新增详细指标卡片
+- ✅ 新增最小值过滤功能
+- ✅ 修复精准率行显示问题
+
+### V1.0.0
+- ✅ 初始版本发布
 
 ### 核心概念
 
@@ -40,51 +92,6 @@
 | **稀疏矩阵** | 只显示数据中实际出现且大于minValueFilter的分类值（策略2） |
 
 ---
-
-## v1.1更新内容
-
-### 新增功能
-
-#### 1. 详细指标卡片
-
-在用例详情区域新增4个指标展示：
-
-| 指标 | 说明 | 等级 |
-|------|------|------|
-| 最高召回率 | 各分类中最高的召回率 | 优秀/良好/中等/较低/极低 |
-| 最低召回率 | 各分类中最低的召回率 | 优秀/良好/中等/较低/极低 |
-| 最高精准率 | 各分类中最高的精准率 | 优秀/良好/中等/较低/极低 |
-| 最低精准率 | 各分类中最低的精准率 | 优秀/良好/中等/较低/极低 |
-
-等级判定标准：
-- 优秀: ≥90%
-- 良好: 70-89%
-- 中等: 50-69%
-- 较低: 30-49%
-- 极低: <30%
-
-#### 2. 最小值过滤
-
-新增 `minValueFilter` 参数：
-- 默认值：0
-- 作用：过滤小于等于此值的分类数据
-- 场景：过滤负数、0值等无效分类
-
-```javascript
-// 配置示例
-{
-  caseId: 'CASE_1',
-  minValueFilter: 0,  // 只显示大于0的值
-  matrixStrategy: '2'
-}
-```
-
-### Bug修复
-
-- ✅ 修复精准率行不显示的问题
-- ✅ 修复合计行/列无法点击的问题
-- ✅ 修复显示说明列默认值不友好的问题
-- ✅ 修复稀疏矩阵显示负数的问题
 
 ---
 
@@ -111,10 +118,11 @@
 
 | 技术 | 版本 | 用途 |
 |------|------|------|
-| Vue | 3.x | 前端框架 |
-| Element Plus | 2.x | UI组件库 |
-| Vite | 5.x | 构建工具 |
-| ES Module | - | 模块化方案 |
+| Vue | 3.4+ | 前端框架 |
+| Element Plus | 2.4+ | UI组件库 |
+| Vite | 4.5.x | 构建工具（无原生依赖） |
+| Rollup | 3.x | 打包工具（纯JS版本） |
+| Axios | 1.6+ | HTTP客户端 |
 
 ---
 
@@ -123,32 +131,94 @@
 ```
 frontend/
 ├── index.html              # 入口HTML
-├── package.json            # 依赖配置
+├── package.json            # 依赖配置（Vite 4.x）
 ├── vite.config.js          # Vite配置
+├── .npmrc                  # NPM配置（处理依赖问题）
+├── .gitignore              # Git忽略配置
 ├── README.md               # 本文档
 │
-├── docs/                   # 文档目录 (v1.1新增)
-│   ├── CHANGELOG.md        # 需求变更记录
-│   └── IMPLEMENTATION.md   # 实现文档
+├── docs/                   # 📚 文档目录
+│   ├── CHANGELOG.md                 # 需求变更记录
+│   ├── IMPLEMENTATION.md            # 实现文档
+│   ├── DATA-CALCULATION.md          # 数据计算逻辑
+│   ├── MATRIX-CALCULATION-DETAIL.md # 矩阵计算详解 ⭐
+│   ├── NATIVE-DEPENDENCIES.md       # 原生依赖说明
+│   └── BACKEND-GUIDE.md             # 后端开发者指南 ⭐
 │
 └── src/
     ├── main.js             # 应用入口
     ├── App.vue             # 根组件
     │
-    ├── api/                # API接口层
-    │   └── matrix.js       # 矩阵报告API
+    ├── api/                # 📡 API接口层
+    │   └── matrix.js       # 矩阵报告API（支持Mock切换）
     │
-    ├── views/              # 页面视图
+    ├── views/              # 📄 页面视图
     │   └── MatrixReport.vue    # 主报告页面
     │
-    ├── components/         # 可复用组件
-    │   ├── ConfusionMatrix.vue     # 混淆矩阵组件
+    ├── components/         # 🧩 可复用组件
+    │   ├── ConfusionMatrix.vue     # 混淆矩阵组件（核心）
     │   ├── StatisticsCards.vue     # 统计卡片组件
-    │   └── MetricsCard.vue         # 指标详情组件 (v1.1增强)
+    │   └── MetricsCard.vue         # 指标详情组件
     │
-    └── mock/               # Mock数据层
+    ├── utils/              # 🔧 工具模块 (v1.4新增)
+    │   └── matrixCalculator.js     # 矩阵计算工具 ⭐ 可独立移植
+    │
+    └── mock/               # 🎭 Mock数据层
         ├── index.js        # Mock入口与场景配置
         └── mockData.js     # 数据生成器
+```
+
+---
+
+## 文件依赖关系
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        文件依赖关系图                                 │
+└─────────────────────────────────────────────────────────────────────┘
+
+index.html
+    │
+    └──▶ main.js
+            │
+            ├──▶ App.vue
+            │       │
+            │       └──▶ MatrixReport.vue (主视图)
+            │               │
+            │               ├──▶ api/matrix.js (数据获取)
+            │               │       │
+            │               │       └──▶ mock/index.js (Mock配置)
+            │               │               │
+            │               │               └──▶ mock/mockData.js (数据生成)
+            │               │
+            │               ├──▶ components/StatisticsCards.vue
+            │               ├──▶ components/MetricsCard.vue
+            │               └──▶ components/ConfusionMatrix.vue (核心组件)
+            │                       │
+            │                       └──▶ utils/matrixCalculator.js ⭐
+            │                               │
+            │                               └── 纯JS模块，可独立使用
+            │
+            └──▶ element-plus (UI组件库)
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                        可移植模块                                    │
+└─────────────────────────────────────────────────────────────────────┘
+
+utils/matrixCalculator.js
+    │
+    ├── calculateMatrixMax()    - 计算矩阵最大值
+    ├── filterDetailList()      - 过滤无效数据
+    ├── getDisplayValues()      - 获取显示值列表
+    ├── buildMatrix()           - 构建矩阵数据
+    ├── calculateStatistics()   - 计算统计指标
+    ├── getLabel()              - 获取显示标签
+    └── computeMatrix()         - 一次性计算（便捷函数）
+
+    特点：
+    ✅ 纯JavaScript，不依赖Vue
+    ✅ 可直接复制到其他项目
+    ✅ 内置调试日志功能
 ```
 
 ---
@@ -260,7 +330,7 @@ frontend/
 |------|------|--------|------|
 | statistics | Object | {} | 统计数据对象 |
 
-### MetricsCard.vue (v1.1增强)
+### MetricsCard.vue
 
 指标详情卡片组件，展示用例配置和详细指标。
 
@@ -270,12 +340,112 @@ frontend/
 |------|------|------|------|
 | caseData | Object | 是 | 用例完整数据 |
 
-#### 新增展示内容 (v1.1)
+#### 展示内容
 
 - 最高召回率 + 等级
 - 最低召回率 + 等级
 - 最高精准率 + 等级
 - 最低精准率 + 等级
+
+---
+
+## 工具模块
+
+### matrixCalculator.js (v1.4新增)
+
+独立的矩阵计算工具模块，可移植到其他项目使用。
+
+#### 导入方式
+
+```javascript
+// 按需导入
+import { 
+  computeMatrix, 
+  calculateMatrixMax,
+  filterDetailList,
+  getDisplayValues,
+  buildMatrix,
+  calculateStatistics,
+  getLabel,
+  setDebugMode
+} from '@/utils/matrixCalculator'
+
+// 默认导入
+import matrixCalculator from '@/utils/matrixCalculator'
+```
+
+#### 快速使用
+
+```javascript
+import { computeMatrix } from '@/utils/matrixCalculator'
+
+// 一次性计算所有结果
+const result = computeMatrix({
+  detailList: [...],       // 详情数据
+  markList: [...],         // 标签映射（可选）
+  matrixStrategy: '1',     // '1'=完整矩阵, '2'=稀疏矩阵
+  minValueFilter: 0,       // 最小值过滤
+  debug: true              // 开启调试日志
+})
+
+console.log('矩阵大小:', result.matrixSize)
+console.log('准确率:', result.accuracy + '%')
+console.log('矩阵数据:', result.matrix)
+console.log('标签映射:', result.labels)
+```
+
+#### 返回结果结构
+
+```javascript
+{
+  // 基础信息
+  matrixMax: 5,              // 矩阵最大值
+  matrixSize: 5,             // 矩阵大小
+  displayValues: [1,2,3,4,5], // 显示值列表
+  
+  // 过滤信息
+  originalCount: 200,        // 原始数据量
+  filteredCount: 150,        // 有效数据量
+  invalidCount: 50,          // 无效数据量
+  
+  // 矩阵数据
+  matrix: [[...]],           // 二维矩阵
+  valueToIndex: {...},       // 值到索引映射
+  
+  // 详情映射
+  cellDetails: {...},        // 单元格详情
+  rowDetails: {...},         // 行详情
+  colDetails: {...},         // 列详情
+  
+  // 统计指标
+  rowSums: [...],            // 行合计
+  colSums: [...],            // 列合计
+  recalls: [...],            // 各行召回率
+  precisions: [...],         // 各列精准率
+  totalCount: 150,           // 总数
+  correctCount: 118,         // 正确数
+  accuracy: 78.67,           // 准确率
+  
+  // 标签映射
+  labels: { 1: '天气查询', ... }
+}
+```
+
+#### 调试功能
+
+```javascript
+import { setDebugMode, computeMatrix } from '@/utils/matrixCalculator'
+
+// 方式1：全局开启调试
+setDebugMode(true)
+const result = computeMatrix({ detailList, ... })
+
+// 方式2：单次调用开启调试
+const result = computeMatrix({ 
+  detailList, 
+  debug: true  // 仅本次计算开启
+})
+```
 
 ---
 
@@ -536,39 +706,59 @@ export default defineConfig({
 
 ## 相关文档
 
-- [需求变更记录](./docs/CHANGELOG.md)
-- [实现文档](./docs/IMPLEMENTATION.md)
-- [数据计算逻辑文档](./docs/DATA-CALCULATION.md)
-- [原生依赖说明](./docs/NATIVE-DEPENDENCIES.md)
-- [**后端开发者指南**](./docs/BACKEND-GUIDE.md) ⭐ 推荐后端开发者阅读
-- [**矩阵计算详解**](./docs/MATRIX-CALCULATION-DETAIL.md) ⭐ 矩阵大小与标签计算
+### 核心文档 ⭐
+
+| 文档 | 说明 | 适用人群 |
+|------|------|----------|
+| [矩阵计算详解](./docs/MATRIX-CALCULATION-DETAIL.md) | 矩阵大小与标签计算逻辑详解 | 前端开发/移植者 |
+| [后端开发者指南](./docs/BACKEND-GUIDE.md) | 数据格式要求、接口规范 | 后端开发 |
+| [数据计算逻辑](./docs/DATA-CALCULATION.md) | 完整的计算公式和流程 | 所有开发者 |
+
+### 参考文档
+
+| 文档 | 说明 |
+|------|------|
+| [需求变更记录](./docs/CHANGELOG.md) | 版本迭代的需求变更 |
+| [实现文档](./docs/IMPLEMENTATION.md) | 功能实现细节 |
+| [原生依赖说明](./docs/NATIVE-DEPENDENCIES.md) | Vite/Rollup原生依赖处理 |
 
 ---
 
 ## 更新日志
 
+### 2025-12-06 V1.4.0 (当前)
+
+- 🔧 抽取可移植的计算工具模块 (`utils/matrixCalculator.js`)
+- 📝 新增矩阵计算详解文档
+- 🐛 内置调试面板和日志功能
+- 💬 代码注释优化，便于移植
+
+### 2025-12-06 V1.3.0
+
+- ⬇️ 降级 Vite 到 4.x 版本（使用 Rollup 3.x）
+- 📝 新增原生依赖说明文档
+- 📝 新增后端开发者指南
+
 ### 2025-12-06 V1.2.0
 
-- 将混淆矩阵表格从原生 table 改为 el-table 实现
-- 优化表格样式和交互体验
-- 新增数据计算逻辑完整文档
-
-
+- 🔄 混淆矩阵表格改用 el-table 实现
+- ✨ 优化表格样式和交互体验
+- 📝 新增数据计算逻辑文档
 
 ### 2025-12-06 V1.1.0
 
-- 新增详细指标卡片（最高/最低精准率、召回率）
-- 新增最小值过滤功能（minValueFilter参数）
-- 修复精准率行不显示问题
-- 修复合计行/列无法点击问题
-- 添加需求变更文档和实现文档
+- ➕ 新增详细指标卡片（最高/最低精准率、召回率）
+- ➕ 新增最小值过滤功能（minValueFilter参数）
+- 🐛 修复精准率行不显示问题
+- 🐛 修复合计行/列无法点击问题
+- 📝 添加需求变更文档和实现文档
 
 ### 2025-12-06 V1.0.0
 
-- 初始版本发布
-- 实现核心混淆矩阵功能
-- 支持完整矩阵和稀疏矩阵两种策略
-- 添加Mock数据支持
+- 🎉 初始版本发布
+- ✨ 实现核心混淆矩阵功能
+- ✨ 支持完整矩阵和稀疏矩阵两种策略
+- ✨ 添加Mock数据支持
 
 ---
 
