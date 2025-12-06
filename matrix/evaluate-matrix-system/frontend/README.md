@@ -539,6 +539,7 @@ export default defineConfig({
 - [需求变更记录](./docs/CHANGELOG.md)
 - [实现文档](./docs/IMPLEMENTATION.md)
 - [数据计算逻辑文档](./docs/DATA-CALCULATION.md)
+- [原生依赖说明](./docs/NATIVE-DEPENDENCIES.md)
 
 ---
 
