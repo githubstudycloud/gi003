@@ -540,6 +540,7 @@ export default defineConfig({
 - [实现文档](./docs/IMPLEMENTATION.md)
 - [数据计算逻辑文档](./docs/DATA-CALCULATION.md)
 - [原生依赖说明](./docs/NATIVE-DEPENDENCIES.md)
+- [**后端开发者指南**](./docs/BACKEND-GUIDE.md) ⭐ 推荐后端开发者阅读
 
 ---
 

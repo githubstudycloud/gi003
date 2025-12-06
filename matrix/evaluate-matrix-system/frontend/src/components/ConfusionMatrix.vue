@@ -1,14 +1,50 @@
 <template>
   <div class="confusion-matrix-wrapper">
+    <!-- 调试信息面板（开发模式显示） -->
+    <div v-if="showDebug" class="debug-panel">
+      <div class="debug-header">
+        <span>🔧 数据调试面板</span>
+        <el-button size="small" @click="printDebugInfo">打印到控制台</el-button>
+      </div>
+      <el-collapse>
+        <el-collapse-item title="1. 输入参数 (Props)" name="props">
+          <pre>{{ debugInfo.props }}</pre>
+        </el-collapse-item>
+        <el-collapse-item title="2. 计算后的矩阵最大值" name="matrixMax">
+          <pre>{{ debugInfo.matrixMax }}</pre>
+        </el-collapse-item>
+        <el-collapse-item title="3. 显示值列表 (displayValues)" name="displayValues">
+          <pre>{{ debugInfo.displayValues }}</pre>
+        </el-collapse-item>
+        <el-collapse-item title="4. 过滤后的详情数据 (前5条)" name="filteredList">
+          <pre>{{ debugInfo.filteredListSample }}</pre>
+        </el-collapse-item>
+        <el-collapse-item title="5. 矩阵数据 (matrix)" name="matrix">
+          <pre>{{ debugInfo.matrix }}</pre>
+        </el-collapse-item>
+        <el-collapse-item title="6. 表格数据 (tableData)" name="tableData">
+          <pre>{{ debugInfo.tableData }}</pre>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
+
     <!-- 策略说明标签 -->
     <div class="strategy-info">
       <el-tag :type="matrixStrategy === '2' ? 'success' : 'primary'" size="small">
         {{ matrixStrategy === '2' ? '稀疏矩阵模式（仅显示出现的值）' : '完整矩阵模式（正方形）' }}
       </el-tag>
       <span class="matrix-size">矩阵大小: {{ displayValues.length }} x {{ displayValues.length }}</span>
+      <span class="matrix-max-info">最大值: {{ calculatedMatrixMax }}</span>
       <span v-if="minValueFilter > 0" class="filter-info">
         <el-tag type="warning" size="small">过滤值 ≤ {{ minValueFilter }}</el-tag>
       </span>
+      <el-switch
+        v-model="showDebug"
+        active-text="调试"
+        inactive-text=""
+        size="small"
+        style="margin-left: auto;"
+      />
     </div>
 
     <!-- 主矩阵表格 - 使用 el-table -->
@@ -133,51 +169,113 @@
 
 <script setup>
 /**
- * 混淆矩阵组件 - 使用 el-table 实现
+ * ============================================================================
+ * 混淆矩阵组件 (ConfusionMatrix.vue)
+ * ============================================================================
  * 
- * 功能：
- * 1. 支持两种矩阵策略：完整矩阵(策略1)和稀疏矩阵(策略2)
- * 2. 显示召回率和精准率
- * 3. 单元格点击查看详情
- * 4. 合计行/列点击查看汇总数据
- * 5. 支持最小值过滤（过滤掉小于等于指定值的数据）
+ * 【组件功能】
+ * 1. 接收后端返回的详情数据列表，渲染成混淆矩阵表格
+ * 2. 支持两种矩阵策略：完整矩阵(策略1)和稀疏矩阵(策略2)
+ * 3. 自动计算矩阵最大值（从数据中取实际值和预测值的最大值）
+ * 4. 显示召回率和精准率
+ * 5. 单元格点击查看详情
+ * 
+ * 【数据流向】
+ * 后端API → MatrixReport.vue → ConfusionMatrix.vue（本组件）
+ * 
+ * 【Props 参数说明】
+ * @prop {Array}  detailList     - 详情数据列表，每条记录包含 acturalValue, predictedValue 等
+ * @prop {Array}  markList       - 标记映射列表，用于将数值转换为显示名称
+ * @prop {Object} statistics     - 统计信息（可选，用于传递预计算的统计值）
+ * @prop {String} matrixStrategy - 矩阵策略 "1"=完整矩阵 "2"=稀疏矩阵
+ * @prop {Number} minValueFilter - 最小值过滤阈值，只显示大于此值的分类
  * 
  * @author AI Assistant
- * @version 1.2.0
+ * @version 1.3.0
+ * ============================================================================
  */
 
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
-// ==================== Props 定义 ====================
+// ============================================================================
+// Props 定义 - 【后端需要关注的数据格式】
+// ============================================================================
 const props = defineProps({
-  /** 详情数据列表 */
+  /**
+   * 【重要】详情数据列表 - 后端返回的核心数据
+   * 
+   * 数据格式示例:
+   * [
+   *   {
+   *     "corpusId": "QA_12345",       // 语料ID（唯一标识）
+   *     "acturalValue": "1",          // 实际值（字符串类型的数字）
+   *     "predictedValue": "1",        // 预测值（字符串类型的数字）
+   *     "descValue": "天气查询",      // 描述值（可选，用于显示说明）
+   *     "createTime": "2025-12-06"    // 创建时间
+   *   },
+   *   ...
+   * ]
+   * 
+   * 注意: acturalValue 和 predictedValue 必须是可以转换为整数的字符串
+   */
   detailList: {
     type: Array,
     default: () => []
   },
-  /** 标记映射列表，用于显示说明 */
+
+  /**
+   * 【可选】标记映射列表 - 用于将数值转换为可读的显示名称
+   * 
+   * 数据格式示例:
+   * [
+   *   { "id": "1", "value": "1", "desc": "天气查询" },
+   *   { "id": "2", "value": "2", "desc": "知识问答" },
+   *   ...
+   * ]
+   * 
+   * 取值逻辑（优先级从高到低）:
+   * 1. 从 markList 中匹配 value 或 id
+   * 2. 从 detailList 中查找对应的 descValue
+   * 3. 返回默认值 "值{数字}"
+   */
   markList: {
     type: Array,
     default: () => []
   },
-  /** 统计信息 */
+
+  /**
+   * 【可选】统计信息 - 预计算的统计数据
+   * 
+   * 数据格式示例:
+   * {
+   *   "totalCount": 200,      // 总样本数
+   *   "validCount": 190,      // 有效样本数
+   *   "correctCount": 150,    // 预测正确数
+   *   "accuracy": 78.95,      // 准确率
+   *   "matrixMax": 5          // 【已废弃】现在从数据自动计算
+   * }
+   * 
+   * 注意: matrixMax 现在会从 detailList 中自动计算，不再需要后端传递
+   */
   statistics: {
     type: Object,
     default: () => ({})
   },
-  /** 
+
+  /**
    * 矩阵策略
-   * "1" - 完整正方形矩阵（0到最大值）
-   * "2" - 稀疏矩阵（只显示出现过的值）
+   * "1" - 完整正方形矩阵：显示从 minValueFilter+1 到 最大值 的所有分类
+   * "2" - 稀疏矩阵：只显示数据中实际出现过的分类值
    */
   matrixStrategy: {
     type: String,
     default: '1'
   },
+
   /**
    * 最小值过滤阈值
-   * 只显示大于此值的分类（用于过滤负数等无效数据）
-   * 默认为0，即只显示大于0的值
+   * 只显示大于此值的分类（用于过滤负数、0等无效数据）
+   * 默认为0，即只显示 > 0 的值（1, 2, 3...）
    */
   minValueFilter: {
     type: Number,
@@ -185,23 +283,65 @@ const props = defineProps({
   }
 })
 
-// ==================== Events 定义 ====================
+// ============================================================================
+// Events 定义
+// ============================================================================
 const emit = defineEmits([
-  'cell-click'  // 统一的点击事件
+  'cell-click'  // 单元格点击事件，传递点击的单元格详情
 ])
 
-// ==================== 计算属性 ====================
+// ============================================================================
+// 响应式状态
+// ============================================================================
+
+/** 是否显示调试面板 */
+const showDebug = ref(false)
+
+// ============================================================================
+// 核心计算属性
+// ============================================================================
+
+/**
+ * 【核心】从数据中自动计算矩阵最大值
+ * 
+ * 计算逻辑:
+ * 1. 遍历所有详情数据
+ * 2. 解析每条记录的 acturalValue 和 predictedValue
+ * 3. 找出所有有效数值中的最大值
+ * 4. 这个最大值决定了完整矩阵的大小
+ * 
+ * 例如: 如果数据中最大的实际值是4，最大的预测值是5，则 matrixMax = 5
+ */
+const calculatedMatrixMax = computed(() => {
+  let maxVal = 0
+  
+  props.detailList.forEach(detail => {
+    const actual = parseInt(detail.acturalValue)
+    const predicted = parseInt(detail.predictedValue)
+    
+    if (!isNaN(actual) && actual > maxVal) {
+      maxVal = actual
+    }
+    if (!isNaN(predicted) && predicted > maxVal) {
+      maxVal = predicted
+    }
+  })
+  
+  // 如果统计信息中有 matrixMax 且更大，使用它（向后兼容）
+  if (props.statistics.matrixMax && props.statistics.matrixMax > maxVal) {
+    maxVal = props.statistics.matrixMax
+  }
+  
+  return maxVal
+})
 
 /**
  * 过滤后的有效详情数据
  * 
- * 计算逻辑：
- * 1. 遍历所有详情数据
- * 2. 解析 acturalValue 和 predictedValue 为整数
- * 3. 过滤条件：
- *    - 两个值都必须是有效数字（非NaN）
- *    - 两个值都必须大于 minValueFilter
- * 4. 返回满足条件的数据数组
+ * 过滤条件:
+ * 1. acturalValue 必须是有效数字
+ * 2. predictedValue 必须是有效数字
+ * 3. 两个值都必须 > minValueFilter
  */
 const filteredDetailList = computed(() => {
   return props.detailList.filter(detail => {
@@ -214,13 +354,6 @@ const filteredDetailList = computed(() => {
 
 /**
  * 获取所有出现过的值（用于策略2-稀疏矩阵）
- * 
- * 计算逻辑：
- * 1. 创建一个 Set 用于存储唯一值
- * 2. 遍历过滤后的详情数据
- * 3. 提取每条记录的 acturalValue 和 predictedValue
- * 4. 只添加大于 minValueFilter 的有效数字
- * 5. 转换为数组并升序排序
  */
 const appearedValues = computed(() => {
   const values = new Set()
@@ -234,25 +367,22 @@ const appearedValues = computed(() => {
 })
 
 /**
- * 根据策略确定要显示的值列表
+ * 【核心】根据策略确定要显示的值列表
  * 
- * 计算逻辑：
- * - 策略1（完整矩阵）：
- *   1. 获取统计信息中的最大值 matrixMax
- *   2. 起始值 = max(0, minValueFilter + 1)
- *   3. 生成从起始值到最大值的连续整数数组
+ * 这个列表决定了矩阵的行和列标题
  * 
- * - 策略2（稀疏矩阵）：
- *   直接使用 appearedValues，只包含实际出现过的值
+ * 策略1（完整矩阵）: [minValueFilter+1, minValueFilter+2, ..., calculatedMatrixMax]
+ * 策略2（稀疏矩阵）: 只包含数据中实际出现过的值
  */
 const displayValues = computed(() => {
   if (props.matrixStrategy === '2') {
-    // 策略2: 只显示出现过的值（已过滤负数和小值）
+    // 策略2: 只显示出现过的值
     return appearedValues.value
   } else {
-    // 策略1: 完整正方形矩阵 (minValueFilter+1 到 最大值)
-    const maxVal = props.statistics.matrixMax || 0
-    const startVal = Math.max(0, props.minValueFilter + 1)
+    // 策略1: 完整正方形矩阵
+    // 【修复】使用计算出的最大值，而不是 statistics 中的固定值
+    const maxVal = calculatedMatrixMax.value
+    const startVal = Math.max(1, props.minValueFilter + 1) // 至少从1开始
     if (maxVal < startVal) return []
     return Array.from({ length: maxVal - startVal + 1 }, (_, i) => i + startVal)
   }
@@ -260,10 +390,6 @@ const displayValues = computed(() => {
 
 /**
  * 值到索引的映射表
- * 
- * 计算逻辑：
- * 创建一个对象，key为显示值，value为该值在displayValues中的索引
- * 用于快速查找某个值对应的矩阵位置
  */
 const valueToIndex = computed(() => {
   const map = {}
@@ -274,32 +400,25 @@ const valueToIndex = computed(() => {
 })
 
 /**
- * 构建矩阵数据和详情映射
+ * 【核心】构建矩阵数据和详情映射
  * 
- * 计算逻辑：
- * 1. 初始化一个 size x size 的二维数组（全0）
- * 2. 初始化三个详情映射对象：
- *    - cellDetails: 存储每个单元格的详细记录
- *    - rowDetails: 存储每行的所有记录
- *    - colDetails: 存储每列的所有记录
- * 3. 遍历过滤后的详情数据：
- *    a. 解析实际值和预测值
- *    b. 查找对应的行列索引
- *    c. 矩阵计数 +1
- *    d. 将记录添加到对应的详情映射中
- * 4. 返回矩阵数据和详情映射
+ * 返回:
+ * - matrix: 二维数组，matrix[行][列] = 计数
+ * - cellDetails: 每个单元格对应的详细记录
+ * - rowDetails: 每行对应的所有记录
+ * - colDetails: 每列对应的所有记录
  */
 const matrixResult = computed(() => {
   const values = displayValues.value
   const size = values.length
-  // 初始化矩阵
+  
+  // 初始化矩阵（全0）
   const mat = Array(size).fill(0).map(() => Array(size).fill(0))
-  // 单元格详情映射 key: "actual_predicted"
-  const cellDetails = {}
-  // 行详情映射 key: actualValue
-  const rowDetails = {}
-  // 列详情映射 key: predictedValue
-  const colDetails = {}
+  
+  // 详情映射
+  const cellDetails = {}  // key: "actual_predicted"
+  const rowDetails = {}   // key: actualValue
+  const colDetails = {}   // key: predictedValue
 
   filteredDetailList.value.forEach(detail => {
     const actual = parseInt(detail.acturalValue)
@@ -310,6 +429,7 @@ const matrixResult = computed(() => {
       const colIdx = valueToIndex.value[predicted]
       
       if (rowIdx !== undefined && colIdx !== undefined) {
+        // 矩阵计数 +1
         mat[rowIdx][colIdx]++
         
         // 存储单元格详情
@@ -317,11 +437,11 @@ const matrixResult = computed(() => {
         if (!cellDetails[cellKey]) cellDetails[cellKey] = []
         cellDetails[cellKey].push(detail)
         
-        // 存储行详情（按实际值）
+        // 存储行详情
         if (!rowDetails[actual]) rowDetails[actual] = []
         rowDetails[actual].push(detail)
         
-        // 存储列详情（按预测值）
+        // 存储列详情
         if (!colDetails[predicted]) colDetails[predicted] = []
         colDetails[predicted].push(detail)
       }
@@ -332,19 +452,21 @@ const matrixResult = computed(() => {
 })
 
 /**
- * 获取显示标签
+ * 【标签取值逻辑】获取显示标签
  * 
- * 查找顺序：
- * 1. 从 markList 中查找匹配的 value 或 id
- * 2. 从 detailList 中查找该实际值对应的 descValue
- * 3. 返回默认值 "值{value}"
+ * 优先级:
+ * 1. markList 中匹配 value 或 id → 返回 desc
+ * 2. detailList 中找到对应 acturalValue → 返回 descValue
+ * 3. 返回默认值 "值{数字}"
  */
 const getLabel = (value) => {
-  // 1. 先从markList查找
-  const mark = props.markList.find(m => String(m.value) === String(value) || String(m.id) === String(value))
+  // 1. 从 markList 查找
+  const mark = props.markList.find(m => 
+    String(m.value) === String(value) || String(m.id) === String(value)
+  )
   if (mark && mark.desc) return mark.desc
   
-  // 2. 从detailList中查找该值对应的descValue
+  // 2. 从 detailList 查找
   const detail = props.detailList.find(d => String(d.acturalValue) === String(value))
   if (detail && detail.descValue && detail.descValue !== '无效数据') return detail.descValue
   
@@ -354,10 +476,6 @@ const getLabel = (value) => {
 
 /**
  * 列合计数组
- * 
- * 计算逻辑：
- * 对每一列，求该列所有行的数值之和
- * colSums[colIdx] = sum(matrix[0][colIdx], matrix[1][colIdx], ..., matrix[n][colIdx])
  */
 const colSums = computed(() => {
   const mat = matrixResult.value.matrix
@@ -374,11 +492,7 @@ const colSums = computed(() => {
 
 /**
  * 精准率数组
- * 
- * 计算公式：精准率[i] = 对角线值[i] / 列合计[i] * 100
- * - 对角线值：matrix[i][i]，即实际值=预测值的数量
- * - 列合计：该预测值的总预测次数
- * - 如果列合计为0，精准率为0（避免除零错误）
+ * 精准率 = 对角线值 / 列合计 × 100%
  */
 const precisions = computed(() => {
   const mat = matrixResult.value.matrix
@@ -389,19 +503,13 @@ const precisions = computed(() => {
 
 /**
  * 总数（有效样本数）
- * 
- * 计算逻辑：所有列合计之和
  */
 const totalCount = computed(() => {
   return colSums.value.reduce((a, b) => a + b, 0)
 })
 
 /**
- * 总准确率
- * 
- * 计算公式：准确率 = 对角线元素之和 / 总数 * 100
- * - 对角线元素：所有 matrix[i][i] 的和，即预测正确的总数
- * - 总数：所有样本数
+ * 总准确率 = 对角线之和 / 总数 × 100%
  */
 const totalAccuracy = computed(() => {
   const mat = matrixResult.value.matrix
@@ -413,34 +521,23 @@ const totalAccuracy = computed(() => {
 })
 
 /**
- * 表格数据（el-table 需要的格式）
+ * 【核心】表格数据（el-table 需要的格式）
  * 
- * 构建逻辑：
- * 1. 数据行：每行对应一个实际值
- *    - rowType: 'data'
- *    - label: 显示说明
- *    - actualValue: 实际值
- *    - pred_X: 预测值为X时的计数
- *    - rowSum: 行合计 = 该实际值的总数
- *    - recall: 召回率 = 对角线值 / 行合计 * 100
- * 
- * 2. 合计行：
- *    - rowType: 'sum'
- *    - label: '合计'
- *    - pred_X: 列合计
- *    - rowSum: 总数
- * 
- * 3. 精准率行：
- *    - rowType: 'precision'
- *    - label: '精准率'
- *    - pred_X: 该列的精准率
+ * 数据结构:
+ * [
+ *   { rowType: 'data', label: '天气查询', actualValue: 1, pred_1: 50, pred_2: 5, ..., rowSum: 60, recall: 83.33 },
+ *   { rowType: 'data', label: '知识问答', actualValue: 2, pred_1: 3, pred_2: 40, ..., rowSum: 50, recall: 80.00 },
+ *   ...
+ *   { rowType: 'sum', label: '合计', pred_1: 55, pred_2: 48, ..., rowSum: 200 },
+ *   { rowType: 'precision', label: '精准率', pred_1: 90.91, pred_2: 83.33, ... }
+ * ]
  */
 const tableData = computed(() => {
   const values = displayValues.value
   const mat = matrixResult.value.matrix
   const rows = []
 
-  // 1. 数据行
+  // 1. 数据行（每行对应一个实际值）
   values.forEach((actualVal, rowIdx) => {
     const row = {
       rowType: 'data',
@@ -460,7 +557,6 @@ const tableData = computed(() => {
     })
     
     row.rowSum = rowSum
-    // 召回率 = 对角线值 / 行总和
     row.recall = rowSum > 0 ? (mat[rowIdx][rowIdx] / rowSum) * 100 : 0
     
     rows.push(row)
@@ -495,9 +591,98 @@ const tableData = computed(() => {
   return rows
 })
 
-// ==================== 样式方法 ====================
+// ============================================================================
+// 调试信息
+// ============================================================================
 
-/** 表头单元格样式 */
+/**
+ * 调试信息对象（用于开发调试）
+ */
+const debugInfo = computed(() => ({
+  props: {
+    detailListCount: props.detailList.length,
+    markListCount: props.markList.length,
+    matrixStrategy: props.matrixStrategy,
+    minValueFilter: props.minValueFilter,
+    statisticsFromProps: props.statistics
+  },
+  matrixMax: {
+    calculatedFromData: calculatedMatrixMax.value,
+    fromStatistics: props.statistics.matrixMax,
+    used: calculatedMatrixMax.value
+  },
+  displayValues: displayValues.value,
+  filteredListSample: filteredDetailList.value.slice(0, 5),
+  matrix: matrixResult.value.matrix,
+  tableData: tableData.value.map(row => ({
+    rowType: row.rowType,
+    label: row.label,
+    actualValue: row.actualValue,
+    rowSum: row.rowSum,
+    recall: row.recall
+  }))
+}))
+
+/**
+ * 打印调试信息到控制台
+ */
+const printDebugInfo = () => {
+  console.group('🔧 ConfusionMatrix 调试信息')
+  
+  console.group('1. 输入参数 (Props)')
+  console.log('detailList 数量:', props.detailList.length)
+  console.log('detailList 示例 (前3条):', props.detailList.slice(0, 3))
+  console.log('markList:', props.markList)
+  console.log('statistics:', props.statistics)
+  console.log('matrixStrategy:', props.matrixStrategy)
+  console.log('minValueFilter:', props.minValueFilter)
+  console.groupEnd()
+  
+  console.group('2. 矩阵最大值计算')
+  console.log('从数据计算的最大值:', calculatedMatrixMax.value)
+  console.log('从statistics传入的值:', props.statistics.matrixMax)
+  console.log('实际使用的值:', calculatedMatrixMax.value)
+  console.groupEnd()
+  
+  console.group('3. 显示值列表')
+  console.log('displayValues:', displayValues.value)
+  console.log('矩阵大小:', displayValues.value.length, 'x', displayValues.value.length)
+  console.groupEnd()
+  
+  console.group('4. 过滤后的数据')
+  console.log('过滤前数量:', props.detailList.length)
+  console.log('过滤后数量:', filteredDetailList.value.length)
+  console.log('被过滤掉的数量:', props.detailList.length - filteredDetailList.value.length)
+  console.groupEnd()
+  
+  console.group('5. 矩阵数据')
+  console.table(matrixResult.value.matrix)
+  console.groupEnd()
+  
+  console.group('6. 表格数据')
+  console.table(tableData.value)
+  console.groupEnd()
+  
+  console.group('7. 标签映射示例')
+  displayValues.value.slice(0, 5).forEach(val => {
+    console.log(`值 ${val} → 标签: ${getLabel(val)}`)
+  })
+  console.groupEnd()
+  
+  console.groupEnd()
+}
+
+// 监听数据变化，自动打印日志（开发环境）
+watch(() => props.detailList, (newVal) => {
+  if (showDebug.value && newVal.length > 0) {
+    console.log('📊 detailList 数据更新:', newVal.length, '条')
+  }
+}, { deep: true })
+
+// ============================================================================
+// 样式方法
+// ============================================================================
+
 const headerCellStyle = {
   background: '#409EFF',
   color: 'white',
@@ -505,38 +690,22 @@ const headerCellStyle = {
   textAlign: 'center'
 }
 
-/**
- * 获取单元格样式
- */
-const getCellStyle = ({ row, column }) => {
-  // 合计行背景
+const getCellStyle = ({ row }) => {
   if (row.rowType === 'sum') {
     return { background: '#e7f3ff', fontWeight: 'bold' }
   }
-  // 精准率行背景
   if (row.rowType === 'precision') {
     return { background: '#e8f5e9', fontWeight: 'bold' }
   }
   return {}
 }
 
-/**
- * 获取行类名
- */
 const getRowClassName = ({ row }) => {
   if (row.rowType === 'sum') return 'row-sum'
   if (row.rowType === 'precision') return 'row-precision'
   return ''
 }
 
-/**
- * 获取数据单元格类名
- * 
- * 逻辑：
- * - 值为0：灰色背景
- * - 对角线（实际=预测）：绿色背景，可点击
- * - 非对角线：黄色背景，可点击
- */
 const getDataCellClass = (actualVal, predictVal, value) => {
   const classes = ['data-cell']
   if (value === 0) {
@@ -549,37 +718,25 @@ const getDataCellClass = (actualVal, predictVal, value) => {
   return classes.join(' ')
 }
 
-/**
- * 获取指标颜色类
- * 
- * 逻辑：
- * - >= 90%：绿色（高）
- * - >= 70%：橙色（中）
- * - < 70%：红色（低）
- */
 const getMetricClass = (value) => {
   if (value >= 90) return 'metric-high'
   if (value >= 70) return 'metric-medium'
   return 'metric-low'
 }
 
-// ==================== 格式化方法 ====================
+// ============================================================================
+// 格式化方法
+// ============================================================================
 
-/**
- * 格式化百分比
- * @param {number} value - 百分比值
- * @returns {string} 格式化后的字符串，如 "85.50%"
- */
 const formatPercent = (value) => {
   if (value === null || value === undefined) return '-'
   return (Math.round(value * 100) / 100).toFixed(2) + '%'
 }
 
-// ==================== 事件处理 ====================
+// ============================================================================
+// 事件处理
+// ============================================================================
 
-/**
- * 单元格点击处理
- */
 const handleCellClick = (actualVal, predictVal, value) => {
   if (value === 0) return
   
@@ -595,9 +752,6 @@ const handleCellClick = (actualVal, predictVal, value) => {
   })
 }
 
-/**
- * 行合计点击处理
- */
 const handleRowSumClick = (actualVal) => {
   const records = matrixResult.value.rowDetails[actualVal] || []
   if (records.length === 0) return
@@ -612,9 +766,6 @@ const handleRowSumClick = (actualVal) => {
   })
 }
 
-/**
- * 列合计点击处理
- */
 const handleColSumClick = (predictVal) => {
   const records = matrixResult.value.colDetails[predictVal] || []
   if (records.length === 0) return
@@ -631,6 +782,34 @@ const handleColSumClick = (predictVal) => {
 </script>
 
 <style scoped>
+/* ==================== 调试面板样式 ==================== */
+.debug-panel {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #fef0f0;
+  border: 1px solid #fab6b6;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #f56c6c;
+}
+
+.debug-panel pre {
+  background: #fff;
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 11px;
+  max-height: 200px;
+}
+
 /* ==================== 容器样式 ==================== */
 .confusion-matrix-wrapper {
   overflow-x: auto;
@@ -646,13 +825,14 @@ const handleColSumClick = (predictVal) => {
   border-radius: 4px;
 }
 
-.matrix-size {
+.matrix-size,
+.matrix-max-info {
   font-size: 13px;
   color: #606266;
 }
 
 .filter-info {
-  margin-left: auto;
+  margin-left: 8px;
 }
 
 /* ==================== el-table 样式覆盖 ==================== */
@@ -661,7 +841,6 @@ const handleColSumClick = (predictVal) => {
   font-size: 13px;
 }
 
-/* 固定列样式 */
 :deep(.col-label) {
   background: #f0f9ff !important;
   font-weight: 600;
