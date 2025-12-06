@@ -538,10 +538,19 @@ export default defineConfig({
 
 - [需求变更记录](./docs/CHANGELOG.md)
 - [实现文档](./docs/IMPLEMENTATION.md)
+- [数据计算逻辑文档](./docs/DATA-CALCULATION.md)
 
 ---
 
 ## 更新日志
+
+### 2025-12-06 V1.2.0
+
+- 将混淆矩阵表格从原生 table 改为 el-table 实现
+- 优化表格样式和交互体验
+- 新增数据计算逻辑完整文档
+
+
 
 ### 2025-12-06 V1.1.0
 
