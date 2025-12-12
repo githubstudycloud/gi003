@@ -110,6 +110,13 @@ export const calculateMatrixMax = (detailList) => {
 }
 
 /**
+ * 默认最大显示值限制
+ * 完整矩阵模式下，值范围为 0 ~ maxDisplayValue
+ * 稀疏矩阵模式下，取前 maxDisplayValue 个有值的分类
+ */
+export const DEFAULT_MAX_DISPLAY_VALUE = 50
+
+/**
  * 【核心函数2】过滤详情数据
  *
  * 过滤掉无效数据，只保留有效的记录
@@ -118,29 +125,36 @@ export const calculateMatrixMax = (detailList) => {
  * 1. acturalValue 必须能转换为有效整数
  * 2. predictedValue 必须能转换为有效整数
  * 3. 两个值都必须大于 minValueFilter
+ * 4. 两个值都必须小于等于 maxDisplayValue（新增）
  *
  * 【示例】
  * 输入: [
  *   { acturalValue: "1", predictedValue: "2" },  // 有效
  *   { acturalValue: "abc", predictedValue: "1" }, // 无效：acturalValue不是数字
  *   { acturalValue: "-1", predictedValue: "1" },  // 无效：acturalValue=-1 不大于 minValueFilter=-1
+ *   { acturalValue: "51", predictedValue: "1" },  // 无效：acturalValue=51 > maxDisplayValue=50
  * ]
  * minValueFilter: -1 (默认值，包含0)
+ * maxDisplayValue: 50 (默认值)
  * 输出: [{ acturalValue: "1", predictedValue: "2" }]
  *
  * @param {Array} detailList - 详情数据列表
  * @param {number} minValueFilter - 最小值过滤阈值（默认-1，包含0值）
- * @returns {Array} 过滤后的有效数据列表
+ * @param {number} maxDisplayValue - 最大显示值限制（默认50）
+ * @returns {Object} { filtered: 过滤后的数据, exceedCount: 超出最大值被过滤的数量 }
  */
-export const filterDetailList = (detailList, minValueFilter = -1) => {
+export const filterDetailList = (detailList, minValueFilter = -1, maxDisplayValue = DEFAULT_MAX_DISPLAY_VALUE) => {
   log('开始过滤数据...')
   log('过滤前数量:', detailList.length)
   log('最小值过滤阈值:', minValueFilter)
-  
+  log('最大显示值限制:', maxDisplayValue)
+
+  let exceedCount = 0  // 记录超出最大值的数据数量
+
   const filtered = detailList.filter(detail => {
     const actual = parseInt(detail.acturalValue)
     const predicted = parseInt(detail.predictedValue)
-    
+
     // 检查是否为有效数字
     if (isNaN(actual)) {
       log(`过滤: acturalValue="${detail.acturalValue}" 不是有效数字`)
@@ -150,7 +164,7 @@ export const filterDetailList = (detailList, minValueFilter = -1) => {
       log(`过滤: predictedValue="${detail.predictedValue}" 不是有效数字`)
       return false
     }
-    
+
     // 检查是否大于最小值过滤阈值
     // 使用 <= 表示过滤掉小于等于阈值的数据
     // 例如：minValueFilter=0 时，过滤掉0和负数；minValueFilter=-1 时，只过滤负数（保留0）
@@ -162,14 +176,22 @@ export const filterDetailList = (detailList, minValueFilter = -1) => {
       log(`过滤: predictedValue=${predicted} <= ${minValueFilter}`)
       return false
     }
-    
+
+    // 检查是否超出最大显示值限制（新增）
+    if (actual > maxDisplayValue || predicted > maxDisplayValue) {
+      log(`过滤: 值超出最大限制 actual=${actual}, predicted=${predicted}, max=${maxDisplayValue}`)
+      exceedCount++
+      return false
+    }
+
     return true
   })
-  
+
   log('过滤后数量:', filtered.length)
   log('被过滤掉的数量:', detailList.length - filtered.length)
-  
-  return filtered
+  log('超出最大值的数量:', exceedCount)
+
+  return { filtered, exceedCount }
 }
 
 /**
@@ -178,34 +200,37 @@ export const filterDetailList = (detailList, minValueFilter = -1) => {
  * 根据策略确定矩阵的行/列标题值列表
  *
  * 【策略说明】
- * - 策略1（完整矩阵）：生成从 minValueFilter+1 到 matrixMax 的连续整数
- *   例如：minValueFilter=-1, matrixMax=5 → [0, 1, 2, 3, 4, 5]
+ * - 策略1（完整矩阵）：生成从 minValueFilter+1 到 min(matrixMax, maxDisplayValue) 的连续整数
+ *   例如：minValueFilter=-1, matrixMax=100, maxDisplayValue=50 → [0, 1, 2, ..., 50]
  *
- * - 策略2（稀疏矩阵）：只包含数据中实际出现过的值
- *   例如：数据中出现 0, 1, 3, 5 → [0, 1, 3, 5]（跳过 2, 4）
+ * - 策略2（稀疏矩阵）：只包含数据中实际出现过的值，按从小到大排序后取前 maxDisplayValue 个
+ *   例如：数据中出现 0, 1, 3, 5, ..., 100 共 60 个值 → 取前 50 个 [0, 1, 3, 5, ..., N]
  *
  * @param {Array} filteredList - 过滤后的数据列表
  * @param {number} matrixMax - 矩阵最大值
  * @param {string} matrixStrategy - 矩阵策略 "1"=完整 "2"=稀疏
  * @param {number} minValueFilter - 最小值过滤阈值（默认-1，包含0值）
- * @returns {Array} 显示值列表
+ * @param {number} maxDisplayValue - 最大显示值限制（默认50）
+ * @returns {Object} { values: 显示值列表, truncatedCount: 被截断的值数量 }
  */
-export const getDisplayValues = (filteredList, matrixMax, matrixStrategy, minValueFilter = -1) => {
+export const getDisplayValues = (filteredList, matrixMax, matrixStrategy, minValueFilter = -1, maxDisplayValue = DEFAULT_MAX_DISPLAY_VALUE) => {
   log('开始计算显示值列表...')
   log('策略:', matrixStrategy === '2' ? '稀疏矩阵' : '完整矩阵')
   log('最大值:', matrixMax)
   log('最小值过滤:', minValueFilter)
-  
+  log('最大显示值限制:', maxDisplayValue)
+
   let values = []
-  
+  let truncatedCount = 0  // 被截断的值数量
+
   if (matrixStrategy === '2') {
     // 策略2：稀疏矩阵 - 只显示出现过的值
     const valueSet = new Set()
-    
+
     filteredList.forEach(detail => {
       const actual = parseInt(detail.acturalValue)
       const predicted = parseInt(detail.predictedValue)
-      
+
       if (!isNaN(actual) && actual > minValueFilter) {
         valueSet.add(actual)
       }
@@ -213,28 +238,47 @@ export const getDisplayValues = (filteredList, matrixMax, matrixStrategy, minVal
         valueSet.add(predicted)
       }
     })
-    
-    values = Array.from(valueSet).sort((a, b) => a - b)
+
+    // 排序后取前 maxDisplayValue 个（按从小到大）
+    const allValues = Array.from(valueSet).sort((a, b) => a - b)
+
+    if (allValues.length > maxDisplayValue) {
+      values = allValues.slice(0, maxDisplayValue)
+      truncatedCount = allValues.length - maxDisplayValue
+      log(`稀疏矩阵 - 原始值数量 ${allValues.length}，截断为前 ${maxDisplayValue} 个`)
+    } else {
+      values = allValues
+    }
     log('稀疏矩阵 - 出现的唯一值:', values)
-    
+
   } else {
     // 策略1：完整矩阵 - 连续整数
     // 使用 Math.max(0, ...) 允许当 minValueFilter < 0 时从0开始
     // 例如：minValueFilter=-1 时，startVal=0；minValueFilter=0 时，startVal=1
     const startVal = Math.max(0, minValueFilter + 1)
+    // 限制最大值不超过 maxDisplayValue
+    const endVal = Math.min(matrixMax, maxDisplayValue)
 
-    if (matrixMax >= startVal) {
-      for (let i = startVal; i <= matrixMax; i++) {
+    if (matrixMax > maxDisplayValue) {
+      truncatedCount = matrixMax - maxDisplayValue
+      log(`完整矩阵 - 原始最大值 ${matrixMax}，截断为 ${maxDisplayValue}`)
+    }
+
+    if (endVal >= startVal) {
+      for (let i = startVal; i <= endVal; i++) {
         values.push(i)
       }
     }
-    log('完整矩阵 - 连续值范围:', `${startVal} ~ ${matrixMax}`)
+    log('完整矩阵 - 连续值范围:', `${startVal} ~ ${endVal}`)
   }
-  
+
   log('最终显示值列表:', values)
   log('矩阵大小:', values.length, 'x', values.length)
-  
-  return values
+  if (truncatedCount > 0) {
+    log('被截断的值数量:', truncatedCount)
+  }
+
+  return { values, truncatedCount }
 }
 
 /**
@@ -530,6 +574,7 @@ export const getLabel = (value, markList = [], detailList = []) => {
  * @param {Array} options.markList - 标记映射列表（可选）
  * @param {string} options.matrixStrategy - 矩阵策略 "1"/"2"（默认"1"）
  * @param {number} options.minValueFilter - 最小值过滤阈值（默认-1，包含0值）
+ * @param {number} options.maxDisplayValue - 最大显示值限制（默认50）
  * @param {boolean} options.debug - 是否开启调试日志（默认false）
  * @returns {Object} 完整的计算结果
  */
@@ -539,71 +584,78 @@ export const computeMatrix = (options) => {
     markList = [],
     matrixStrategy = '1',
     minValueFilter = -1,
+    maxDisplayValue = DEFAULT_MAX_DISPLAY_VALUE,
     debug = false
   } = options
-  
+
   // 设置调试模式
   setDebugMode(debug)
-  
+
   console.group('🔢 混淆矩阵计算开始')
-  console.log('输入参数:', { 
-    detailListCount: detailList.length, 
+  console.log('输入参数:', {
+    detailListCount: detailList.length,
     markListCount: markList.length,
     matrixStrategy,
-    minValueFilter 
+    minValueFilter,
+    maxDisplayValue
   })
-  
+
   // 1. 计算矩阵最大值
   const matrixMax = calculateMatrixMax(detailList)
-  
-  // 2. 过滤数据
-  const filteredList = filterDetailList(detailList, minValueFilter)
-  
-  // 3. 获取显示值列表
-  const displayValues = getDisplayValues(filteredList, matrixMax, matrixStrategy, minValueFilter)
-  
+
+  // 2. 过滤数据（新增返回格式）
+  const { filtered: filteredList, exceedCount } = filterDetailList(detailList, minValueFilter, maxDisplayValue)
+
+  // 3. 获取显示值列表（新增返回格式）
+  const { values: displayValues, truncatedCount } = getDisplayValues(filteredList, matrixMax, matrixStrategy, minValueFilter, maxDisplayValue)
+
   // 4. 构建矩阵
   const { matrix, cellDetails, rowDetails, colDetails, valueToIndex } = buildMatrix(filteredList, displayValues)
-  
+
   // 5. 计算统计指标
   const statistics = calculateStatistics(matrix, displayValues)
-  
+
   // 6. 构建标签映射
   const labels = {}
   displayValues.forEach(val => {
     labels[val] = getLabel(val, markList, detailList)
   })
-  
+
   console.log('计算完成:', {
     matrixSize: displayValues.length,
     totalCount: statistics.totalCount,
-    accuracy: statistics.accuracy.toFixed(2) + '%'
+    accuracy: statistics.accuracy.toFixed(2) + '%',
+    exceedCount,
+    truncatedCount
   })
   console.groupEnd()
-  
+
   return {
     // 基础信息
     matrixMax,
     matrixSize: displayValues.length,
     displayValues,
-    
+    maxDisplayValue,
+
     // 过滤信息
     originalCount: detailList.length,
     filteredCount: filteredList.length,
     invalidCount: detailList.length - filteredList.length,
-    
+    exceedCount,       // 超出最大值被过滤的数据数量
+    truncatedCount,    // 显示值列表被截断的数量
+
     // 矩阵数据
     matrix,
     valueToIndex,
-    
+
     // 详情映射（用于点击查看）
     cellDetails,
     rowDetails,
     colDetails,
-    
+
     // 统计指标
     ...statistics,
-    
+
     // 标签映射
     labels
   }
@@ -641,7 +693,8 @@ export const formatNumber = (value) => {
 export default {
   // 配置
   setDebugMode,
-  
+  DEFAULT_MAX_DISPLAY_VALUE,
+
   // 核心函数
   calculateMatrixMax,
   filterDetailList,
@@ -649,10 +702,10 @@ export default {
   buildMatrix,
   calculateStatistics,
   getLabel,
-  
+
   // 便捷函数
   computeMatrix,
-  
+
   // 格式化
   formatPercent,
   formatNumber

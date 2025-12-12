@@ -30,6 +30,10 @@
             <div class="debug-label">minValueFilter:</div>
             <div class="debug-value">{{ minValueFilter }}</div>
           </div>
+          <div class="debug-item">
+            <div class="debug-label">maxDisplayValue:</div>
+            <div class="debug-value">{{ maxDisplayValue }}</div>
+          </div>
         </el-collapse-item>
         
         <el-collapse-item title="📊 2. 矩阵大小计算" name="matrixSize">
@@ -59,6 +63,14 @@
           <div class="debug-item">
             <div class="debug-label">被过滤:</div>
             <div class="debug-value warn">{{ detailList.length - filteredDetailList.length }} 条</div>
+          </div>
+          <div class="debug-item" v-if="exceedCount > 0">
+            <div class="debug-label">超出最大值:</div>
+            <div class="debug-value warn">{{ exceedCount }} 条</div>
+          </div>
+          <div class="debug-item" v-if="truncatedCount > 0">
+            <div class="debug-label">截断分类数:</div>
+            <div class="debug-value warn">{{ truncatedCount }} 个</div>
           </div>
         </el-collapse-item>
         
@@ -99,8 +111,18 @@
       <span class="info-text">
         最大值: <b>{{ calculatedMatrixMax }}</b>
       </span>
+      <span class="info-text">
+        限制: <b>≤ {{ maxDisplayValue }}</b>
+      </span>
       <span v-if="minValueFilter > 0" class="info-text">
         <el-tag type="warning" size="small">过滤 ≤ {{ minValueFilter }}</el-tag>
+      </span>
+      <span v-if="exceedCount > 0 || truncatedCount > 0" class="info-text">
+        <el-tag type="danger" size="small">
+          {{ exceedCount > 0 ? `${exceedCount}条超限` : '' }}
+          {{ exceedCount > 0 && truncatedCount > 0 ? '，' : '' }}
+          {{ truncatedCount > 0 ? `${truncatedCount}类截断` : '' }}
+        </el-tag>
       </span>
       <!-- 调试开关 -->
       <el-switch
@@ -282,6 +304,27 @@
                 <li>总精准率：分子排除了 0-0 位置的 {{ matrixStats.diagonal[matrixStats.zeroIndex] }} 个样本，分母排除了 0 列的 {{ matrixStats.colSums[matrixStats.zeroIndex] }} 个样本</li>
               </ul>
             </div>
+            <div class="info-section">
+              <h4>🔢 矩阵大小限制</h4>
+              <ul>
+                <li><b>最大显示值</b>：{{ maxDisplayValue }}（数据中超出此值的记录将被视为无效数据）</li>
+                <li v-if="matrixStrategy === '1'">
+                  <b>完整矩阵</b>：显示 0 ~ {{ Math.min(calculatedMatrixMax, maxDisplayValue) }} 的连续分类
+                  <span v-if="calculatedMatrixMax > maxDisplayValue" class="info-note">
+                    （原始最大值 {{ calculatedMatrixMax }}，已截断）
+                  </span>
+                </li>
+                <li v-else>
+                  <b>稀疏矩阵</b>：按从小到大排序，取前 {{ maxDisplayValue }} 个有数据的分类
+                  <span v-if="truncatedCount > 0" class="info-note">
+                    （已截断 {{ truncatedCount }} 个分类）
+                  </span>
+                </li>
+                <li v-if="exceedCount > 0">
+                  <span class="info-note">⚠️ 共有 {{ exceedCount }} 条数据因超出最大值限制被过滤</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -323,7 +366,8 @@ import {
   calculateStatistics as calcStats,
   getLabel as getLabelFromUtils,
   setDebugMode,
-  formatPercent as formatPct
+  formatPercent as formatPct,
+  DEFAULT_MAX_DISPLAY_VALUE
 } from '../utils/matrixCalculator'
 
 // ============================================================================
@@ -385,6 +429,17 @@ const props = defineProps({
   axisLabel: {
     type: String,
     default: ''
+  },
+
+  /**
+   * 最大显示值限制
+   * 完整矩阵：值范围为 0 ~ maxDisplayValue
+   * 稀疏矩阵：取前 maxDisplayValue 个有值的分类
+   * 默认值50，超出的数据将被视为无效数据
+   */
+  maxDisplayValue: {
+    type: Number,
+    default: DEFAULT_MAX_DISPLAY_VALUE
   }
 })
 
@@ -426,31 +481,41 @@ const calculatedMatrixMax = computed(() => {
 
 /**
  * 【计算】过滤后的有效数据
- * 过滤掉非数字和小于等于 minValueFilter 的数据
+ * 过滤掉非数字、小于等于 minValueFilter 和超出 maxDisplayValue 的数据
  */
-const filteredDetailList = computed(() => {
+const filterResult = computed(() => {
   console.log('[Matrix] 过滤数据...', `原始: ${props.detailList.length} 条`)
-  const filtered = filterList(props.detailList, props.minValueFilter)
-  console.log('[Matrix] 过滤后:', filtered.length, '条')
-  return filtered
+  const result = filterList(props.detailList, props.minValueFilter, props.maxDisplayValue)
+  console.log('[Matrix] 过滤后:', result.filtered.length, '条', '超出最大值:', result.exceedCount, '条')
+  return result
 })
+
+const filteredDetailList = computed(() => filterResult.value.filtered)
+const exceedCount = computed(() => filterResult.value.exceedCount)
 
 /**
  * 【计算】显示值列表
  * 决定矩阵的行/列标题
  */
-const displayValues = computed(() => {
+const displayValuesResult = computed(() => {
   console.log('[Matrix] 计算显示值列表...', `策略: ${props.matrixStrategy}`)
-  const values = getDispValues(
+  const result = getDispValues(
     filteredDetailList.value,
     calculatedMatrixMax.value,
     props.matrixStrategy,
-    props.minValueFilter
+    props.minValueFilter,
+    props.maxDisplayValue
   )
-  console.log('[Matrix] 显示值列表:', values)
-  console.log('[Matrix] 矩阵大小:', values.length, '×', values.length)
-  return values
+  console.log('[Matrix] 显示值列表:', result.values)
+  console.log('[Matrix] 矩阵大小:', result.values.length, '×', result.values.length)
+  if (result.truncatedCount > 0) {
+    console.log('[Matrix] 被截断的分类数:', result.truncatedCount)
+  }
+  return result
 })
+
+const displayValues = computed(() => displayValuesResult.value.values)
+const truncatedCount = computed(() => displayValuesResult.value.truncatedCount)
 
 /**
  * 【计算】矩阵数据和详情映射

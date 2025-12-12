@@ -338,6 +338,50 @@ export const mockScenarios = [
         }
       ]
     }
+  },
+
+  // ==================== 超大规模数据场景（测试maxDisplayValue） ====================
+  {
+    id: 'RPT013',
+    name: '超大规模数据（测试最大值限制）',
+    desc: '100个分类，测试完整矩阵截断为50的效果',
+    config: {
+      reportId: 'RPT013',
+      taskId: 'TASK013',
+      caseConfigs: [
+        {
+          caseId: 'CASE_LARGE_FULL',
+          detailCount: 2000,
+          maxValue: 100,  // 超过50的最大值
+          correctRate: 70,
+          matrixStrategy: '1',
+          minValueFilter: DEFAULT_MIN_VALUE_FILTER
+        }
+      ]
+    }
+  },
+
+  // ==================== 稀疏矩阵超大规模场景 ====================
+  {
+    id: 'RPT014',
+    name: '稀疏矩阵超大规模（测试前50截断）',
+    desc: '80个不连续分类，测试稀疏矩阵取前50个的效果',
+    config: {
+      reportId: 'RPT014',
+      taskId: 'TASK014',
+      caseConfigs: [
+        {
+          caseId: 'CASE_LARGE_SPARSE',
+          detailCount: 1500,
+          maxValue: 200,
+          correctRate: 75,
+          matrixStrategy: '2',
+          minValueFilter: DEFAULT_MIN_VALUE_FILTER,
+          // 生成80个不连续的值（会被截断为前50个）
+          validValues: Array.from({ length: 80 }, (_, i) => i * 2 + 1)  // 1, 3, 5, 7, ..., 159
+        }
+      ]
+    }
   }
 ]
 
