@@ -287,7 +287,7 @@ const calculateStatistics = (detailList, maxValue, validValues, minValueFilter =
 
 /**
  * 生成单个用例的完整数据
- * 
+ *
  * @param {Object} caseConfig - 用例配置
  * @param {string} caseConfig.reportId - 报告ID
  * @param {string} caseConfig.taskId - 任务ID
@@ -298,6 +298,7 @@ const calculateStatistics = (detailList, maxValue, validValues, minValueFilter =
  * @param {number} caseConfig.correctRate - 正确率
  * @param {number[]} [caseConfig.validValues] - 有效分类值（稀疏矩阵用）
  * @param {number} [caseConfig.minValueFilter] - 最小值过滤阈值（默认0）
+ * @param {string} [caseConfig.axisLabel] - 自定义坐标轴标签（如"真实\预测"）
  * @returns {Object} 用例完整数据
  */
 const generateCaseData = (caseConfig) => {
@@ -310,7 +311,8 @@ const generateCaseData = (caseConfig) => {
     matrixStrategy = '1',
     correctRate = 70,
     validValues = null,
-    minValueFilter = DEFAULT_MIN_VALUE_FILTER
+    minValueFilter = DEFAULT_MIN_VALUE_FILTER,
+    axisLabel = ''
   } = caseConfig
 
   // 对于稀疏矩阵，如果没有指定validValues，则随机生成（过滤掉小于等于minValueFilter的值）
@@ -364,6 +366,7 @@ const generateCaseData = (caseConfig) => {
     descValueField: 'intent_label',
     matrixStrategy,
     minValueFilter,
+    axisLabel, // 自定义坐标轴标签
     createTime: formatDateTime(new Date()),
     updateTime: formatDateTime(new Date())
   }

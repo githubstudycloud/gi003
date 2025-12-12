@@ -138,7 +138,7 @@
       <!-- 列2: 实际值（固定列） -->
       <el-table-column
         prop="actualValue"
-        label="实际\预测"
+        :label="displayAxisLabel"
         width="90"
         fixed="left"
         align="center"
@@ -203,11 +203,12 @@
           <div v-else-if="row.rowType === 'sum'" class="sum-cell total">
             {{ row.rowSum }}
           </div>
+          <!-- 精准率行的合计列显示总精准率 -->
           <div
             v-else-if="row.rowType === 'precision'"
-            :class="getMetricClass(totalAccuracy)"
+            :class="getMetricClass(totalPrecisionRate)"
           >
-            {{ formatPercent(totalAccuracy) }}
+            {{ formatPercent(totalPrecisionRate) }}
           </div>
         </template>
       </el-table-column>
@@ -225,13 +226,66 @@
           <div v-if="row.rowType === 'data'" :class="getMetricClass(row.recall)">
             {{ formatPercent(row.recall) }}
           </div>
-          <div v-else-if="row.rowType === 'sum'" :class="getMetricClass(totalAccuracy)">
-            {{ formatPercent(totalAccuracy) }}
+          <!-- 合计行的召回率列显示总召回率 -->
+          <div v-else-if="row.rowType === 'sum'" :class="getMetricClass(totalRecallRate)">
+            {{ formatPercent(totalRecallRate) }}
           </div>
-          <div v-else-if="row.rowType === 'precision'" class="diagonal-cell"></div>
+          <!-- 精准率行的召回率列（右下角）显示准确率 -->
+          <div v-else-if="row.rowType === 'precision'" class="accuracy-cell">
+            <span class="accuracy-value" :class="getMetricClass(totalAccuracy)">
+              {{ formatPercent(totalAccuracy) }}
+            </span>
+          </div>
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- ================================================================
+         计算逻辑说明区域（新增）
+         ================================================================ -->
+    <div class="calculation-info">
+      <el-collapse>
+        <el-collapse-item title="📊 指标计算说明" name="info">
+          <div class="info-content">
+            <div class="info-section">
+              <h4>📈 基础指标</h4>
+              <ul>
+                <li><b>准确率 (Accuracy)</b>：对角线总数 ÷ 总样本数 × 100%</li>
+                <li><b>召回率 (Recall)</b>：该行对角线值 ÷ 该行合计 × 100%（衡量实际为某类的样本中，有多少被正确预测）</li>
+                <li><b>精准率 (Precision)</b>：该列对角线值 ÷ 该列合计 × 100%（衡量预测为某类的样本中，有多少是正确的）</li>
+              </ul>
+            </div>
+            <div class="info-section">
+              <h4>📊 汇总指标</h4>
+              <ul>
+                <li v-if="matrixStats.hasZeroValue">
+                  <b>总召回率</b>：(对角线总和 - 0-0位置值) ÷ (行合计总和 - 0行合计) × 100%
+                  <span class="info-note">（排除值为0的分类）</span>
+                </li>
+                <li v-else>
+                  <b>总召回率</b>：对角线总和 ÷ 行合计总和 × 100%
+                </li>
+                <li v-if="matrixStats.hasZeroValue">
+                  <b>总精准率</b>：(对角线总和 - 0-0位置值) ÷ (列合计总和 - 0列合计) × 100%
+                  <span class="info-note">（排除值为0的分类）</span>
+                </li>
+                <li v-else>
+                  <b>总精准率</b>：对角线总和 ÷ 列合计总和 × 100%
+                </li>
+              </ul>
+            </div>
+            <div class="info-section" v-if="matrixStats.hasZeroValue">
+              <h4>⚠️ 排除说明</h4>
+              <p>当前矩阵包含值为0的分类（索引位置：{{ matrixStats.zeroIndex }}），在计算总召回率和总精准率时已排除该分类的数据：</p>
+              <ul>
+                <li>总召回率：分子排除了 0-0 位置的 {{ matrixStats.diagonal[matrixStats.zeroIndex] }} 个样本，分母排除了 0 行的 {{ matrixStats.rowSums[matrixStats.zeroIndex] }} 个样本</li>
+                <li>总精准率：分子排除了 0-0 位置的 {{ matrixStats.diagonal[matrixStats.zeroIndex] }} 个样本，分母排除了 0 列的 {{ matrixStats.colSums[matrixStats.zeroIndex] }} 个样本</li>
+              </ul>
+            </div>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
   </div>
 </template>
 
@@ -285,7 +339,7 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  
+
   /**
    * 标记映射列表 - 用于显示说明
    * 格式: [{ id: "1", value: "1", desc: "天气查询" }, ...]
@@ -294,7 +348,7 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  
+
   /**
    * 统计信息 - 可选的预计算数据
    */
@@ -302,7 +356,7 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  
+
   /**
    * 矩阵策略
    * "1" = 完整矩阵（显示所有值）
@@ -312,7 +366,7 @@ const props = defineProps({
     type: String,
     default: '1'
   },
-  
+
   /**
    * 最小值过滤阈值
    * 只显示大于此值的分类
@@ -320,6 +374,16 @@ const props = defineProps({
   minValueFilter: {
     type: Number,
     default: 0
+  },
+
+  /**
+   * 自定义坐标轴标签（新增）
+   * 用于替换默认的 "实际\预测" 标签
+   * 如果接口返回此值，则使用接口返回的值
+   */
+  axisLabel: {
+    type: String,
+    default: ''
   }
 })
 
@@ -412,6 +476,16 @@ const colSums = computed(() => matrixStats.value.colSums)
 const precisions = computed(() => matrixStats.value.precisions)
 const totalCount = computed(() => matrixStats.value.totalCount)
 const totalAccuracy = computed(() => matrixStats.value.accuracy)
+const totalRecallRate = computed(() => matrixStats.value.totalRecall)
+const totalPrecisionRate = computed(() => matrixStats.value.totalPrecision)
+
+/**
+ * 【计算】显示坐标轴标签（新增）
+ * 优先使用接口返回的 axisLabel，否则使用默认值
+ */
+const displayAxisLabel = computed(() => {
+  return props.axisLabel || '实际\\预测'
+})
 
 /**
  * 【计算】获取标签（显示说明）
@@ -735,4 +809,84 @@ const handleColSumClick = (predictVal) => {
 /* 行样式 */
 :deep(.row-sum), :deep(.row-sum td) { background: #e7f3ff !important; font-weight: bold; }
 :deep(.row-precision), :deep(.row-precision td) { background: #e8f5e9 !important; font-weight: bold; }
+
+/* 准确率单元格样式（右下角） */
+.accuracy-cell {
+  position: relative;
+  min-width: 60px;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accuracy-value {
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* 计算说明区域样式 */
+.calculation-info {
+  margin-top: 16px;
+  border: 1px solid #e4e7ed;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.calculation-info :deep(.el-collapse-item__header) {
+  background: #f5f7fa;
+  padding: 0 16px;
+  font-weight: 600;
+  color: #409EFF;
+}
+
+.calculation-info :deep(.el-collapse-item__content) {
+  padding: 0;
+}
+
+.info-content {
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.info-section {
+  margin-bottom: 16px;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.info-section h4 {
+  margin: 0 0 8px 0;
+  color: #303133;
+  font-size: 14px;
+}
+
+.info-section ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.info-section li {
+  margin-bottom: 4px;
+  color: #606266;
+}
+
+.info-section li b {
+  color: #303133;
+}
+
+.info-note {
+  color: #E6A23C;
+  font-size: 12px;
+}
+
+.info-section p {
+  margin: 0 0 8px 0;
+  color: #606266;
+}
 </style>

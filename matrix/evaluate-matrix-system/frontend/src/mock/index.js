@@ -275,22 +275,66 @@ export const mockScenarios = [
       reportId: 'RPT010',
       taskId: 'TASK010',
       caseConfigs: [
-        { 
-          caseId: 'CASE_FULL', 
-          detailCount: 180, 
-          maxValue: 5, 
+        {
+          caseId: 'CASE_FULL',
+          detailCount: 180,
+          maxValue: 5,
           correctRate: 72,
           matrixStrategy: '1',
           minValueFilter: DEFAULT_MIN_VALUE_FILTER
         },
-        { 
-          caseId: 'CASE_SPARSE', 
-          detailCount: 150, 
-          maxValue: 10, 
+        {
+          caseId: 'CASE_SPARSE',
+          detailCount: 150,
+          maxValue: 10,
           correctRate: 78,
           matrixStrategy: '2',
           minValueFilter: DEFAULT_MIN_VALUE_FILTER,
           validValues: [1, 3, 5, 8, 10]  // 都>0
+        }
+      ]
+    }
+  },
+
+  // ==================== 包含0值场景（新增） ====================
+  {
+    id: 'RPT011',
+    name: '包含0值场景',
+    desc: '包含值为0的分类，测试总召回率和总精准率排除逻辑',
+    config: {
+      reportId: 'RPT011',
+      taskId: 'TASK011',
+      caseConfigs: [
+        {
+          caseId: 'CASE_WITH_ZERO',
+          detailCount: 250,
+          maxValue: 5,
+          correctRate: 75,
+          matrixStrategy: '1',
+          minValueFilter: -1,  // 设为-1以包含0值
+          validValues: [0, 1, 2, 3, 4, 5]  // 包含0
+        }
+      ]
+    }
+  },
+
+  // ==================== 自定义标签场景（新增） ====================
+  {
+    id: 'RPT012',
+    name: '自定义坐标轴标签',
+    desc: '测试自定义"实际\\预测"标签功能',
+    config: {
+      reportId: 'RPT012',
+      taskId: 'TASK012',
+      caseConfigs: [
+        {
+          caseId: 'CASE_CUSTOM_LABEL',
+          detailCount: 200,
+          maxValue: 5,
+          correctRate: 70,
+          matrixStrategy: '1',
+          minValueFilter: DEFAULT_MIN_VALUE_FILTER,
+          axisLabel: '真实\\预测'  // 自定义标签
         }
       ]
     }

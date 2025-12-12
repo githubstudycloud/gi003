@@ -151,7 +151,9 @@ export const filterDetailList = (detailList, minValueFilter = 0) => {
       return false
     }
     
-    // 检查是否大于最小值
+    // 检查是否大于最小值过滤阈值
+    // 使用 <= 表示过滤掉小于等于阈值的数据
+    // 例如：minValueFilter=0 时，过滤掉0和负数；minValueFilter=-1 时，只过滤负数（保留0）
     if (actual <= minValueFilter) {
       log(`过滤: acturalValue=${actual} <= ${minValueFilter}`)
       return false
@@ -217,8 +219,10 @@ export const getDisplayValues = (filteredList, matrixMax, matrixStrategy, minVal
     
   } else {
     // 策略1：完整矩阵 - 连续整数
-    const startVal = Math.max(1, minValueFilter + 1)
-    
+    // 使用 Math.max(0, ...) 允许当 minValueFilter < 0 时从0开始
+    // 例如：minValueFilter=-1 时，startVal=0；minValueFilter=0 时，startVal=1
+    const startVal = Math.max(0, minValueFilter + 1)
+
     if (matrixMax >= startVal) {
       for (let i = startVal; i <= matrixMax; i++) {
         values.push(i)
@@ -319,32 +323,48 @@ export const buildMatrix = (filteredList, displayValues) => {
 
 /**
  * 【核心函数5】计算统计指标
- * 
+ *
  * 根据矩阵数据计算各项统计指标
- * 
+ *
  * 【计算公式】
  * - 行合计(rowSum): 该行所有单元格之和 = 该实际值的总样本数
  * - 列合计(colSum): 该列所有单元格之和 = 该预测值的总预测数
  * - 召回率(recall): 对角线值 / 行合计 × 100%
  * - 精准率(precision): 对角线值 / 列合计 × 100%
  * - 准确率(accuracy): 对角线之和 / 总数 × 100%
- * 
+ *
+ * 【总召回率计算】（新增）
+ * - 分母：所有行合计之和 - 值为0的行合计（如果存在）
+ * - 分子：对角线之和 - 值为0的对角线元素（如果存在）
+ * - 公式：(对角线总和 - 0-0位置值) / (行总和 - 0行总和) × 100%
+ *
+ * 【总精准率计算】（新增）
+ * - 分母：所有列合计之和 - 值为0的列合计（如果存在）
+ * - 分子：对角线之和 - 值为0的对角线元素（如果存在）
+ * - 公式：(对角线总和 - 0-0位置值) / (列总和 - 0列总和) × 100%
+ *
  * @param {Array} matrix - 矩阵数据
  * @param {Array} displayValues - 显示值列表
+ * @param {string} matrixStrategy - 矩阵策略 "1"=完整 "2"=稀疏（可选）
  * @returns {Object} 统计信息
  */
-export const calculateStatistics = (matrix, displayValues) => {
+export const calculateStatistics = (matrix, displayValues, matrixStrategy = '1') => {
   log('开始计算统计指标...')
-  
+
   const size = displayValues.length
-  
+
+  // 查找值为0的索引位置（如果存在）
+  const zeroIndex = displayValues.indexOf(0)
+  const hasZeroValue = zeroIndex !== -1
+  log(`值为0的索引位置: ${hasZeroValue ? zeroIndex : '不存在'}`)
+
   // 1. 计算行合计
   const rowSums = matrix.map((row, i) => {
     const sum = row.reduce((a, b) => a + b, 0)
     log(`行${i}合计 (实际值=${displayValues[i]}): ${sum}`)
     return sum
   })
-  
+
   // 2. 计算列合计
   const colSums = displayValues.map((_, colIdx) => {
     let sum = 0
@@ -354,7 +374,7 @@ export const calculateStatistics = (matrix, displayValues) => {
     log(`列${colIdx}合计 (预测值=${displayValues[colIdx]}): ${sum}`)
     return sum
   })
-  
+
   // 3. 计算对角线（预测正确数）
   let correctCount = 0
   const diagonal = matrix.map((row, i) => {
@@ -363,29 +383,67 @@ export const calculateStatistics = (matrix, displayValues) => {
   })
   log('对角线值:', diagonal)
   log('预测正确总数:', correctCount)
-  
+
   // 4. 计算总数
   const totalCount = rowSums.reduce((a, b) => a + b, 0)
   log('总样本数:', totalCount)
-  
+
   // 5. 计算召回率（每行）
   const recalls = rowSums.map((rowSum, i) => {
     const recall = rowSum > 0 ? (matrix[i][i] / rowSum) * 100 : 0
     log(`召回率[${i}] = ${matrix[i][i]} / ${rowSum} × 100% = ${recall.toFixed(2)}%`)
     return recall
   })
-  
+
   // 6. 计算精准率（每列）
   const precisions = colSums.map((colSum, i) => {
     const precision = colSum > 0 ? (matrix[i][i] / colSum) * 100 : 0
     log(`精准率[${i}] = ${matrix[i][i]} / ${colSum} × 100% = ${precision.toFixed(2)}%`)
     return precision
   })
-  
+
   // 7. 计算总准确率
   const accuracy = totalCount > 0 ? (correctCount / totalCount) * 100 : 0
   log(`准确率 = ${correctCount} / ${totalCount} × 100% = ${accuracy.toFixed(2)}%`)
-  
+
+  // 8. 计算总召回率（排除值为0的行和0-0位置）
+  // 分母：所有行合计之和 - 值为0的行合计
+  // 分子：对角线之和 - 值为0的对角线元素
+  let totalRecallDenominator = totalCount
+  let totalRecallNumerator = correctCount
+
+  if (hasZeroValue) {
+    // 排除值为0的行
+    totalRecallDenominator -= rowSums[zeroIndex]
+    // 排除0-0位置的对角线值
+    totalRecallNumerator -= diagonal[zeroIndex]
+    log(`总召回率排除: 0行合计=${rowSums[zeroIndex]}, 0-0对角线=${diagonal[zeroIndex]}`)
+  }
+
+  const totalRecall = totalRecallDenominator > 0
+    ? (totalRecallNumerator / totalRecallDenominator) * 100
+    : 0
+  log(`总召回率 = ${totalRecallNumerator} / ${totalRecallDenominator} × 100% = ${totalRecall.toFixed(2)}%`)
+
+  // 9. 计算总精准率（排除值为0的列和0-0位置）
+  // 分母：所有列合计之和 - 值为0的列合计
+  // 分子：对角线之和 - 值为0的对角线元素
+  let totalPrecisionDenominator = totalCount
+  let totalPrecisionNumerator = correctCount
+
+  if (hasZeroValue) {
+    // 排除值为0的列
+    totalPrecisionDenominator -= colSums[zeroIndex]
+    // 排除0-0位置的对角线值
+    totalPrecisionNumerator -= diagonal[zeroIndex]
+    log(`总精准率排除: 0列合计=${colSums[zeroIndex]}, 0-0对角线=${diagonal[zeroIndex]}`)
+  }
+
+  const totalPrecision = totalPrecisionDenominator > 0
+    ? (totalPrecisionNumerator / totalPrecisionDenominator) * 100
+    : 0
+  log(`总精准率 = ${totalPrecisionNumerator} / ${totalPrecisionDenominator} × 100% = ${totalPrecision.toFixed(2)}%`)
+
   return {
     rowSums,
     colSums,
@@ -394,7 +452,17 @@ export const calculateStatistics = (matrix, displayValues) => {
     precisions,
     totalCount,
     correctCount,
-    accuracy
+    accuracy,
+    // 新增总召回率和总精准率
+    totalRecall,
+    totalPrecision,
+    // 用于调试的中间值
+    hasZeroValue,
+    zeroIndex,
+    totalRecallDenominator,
+    totalRecallNumerator,
+    totalPrecisionDenominator,
+    totalPrecisionNumerator
   }
 }
 

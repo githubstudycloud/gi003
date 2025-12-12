@@ -115,6 +115,7 @@
               :statistics="caseData.statistics"
               :matrix-strategy="matrixStrategyMap[caseData.caseConfig.caseId] || caseData.caseConfig.matrixStrategy || '1'"
               :min-value-filter="caseData.caseConfig.minValueFilter || 0"
+              :axis-label="caseData.caseConfig.axisLabel || ''"
               @cell-click="handleCellClick"
             />
           </el-card>
