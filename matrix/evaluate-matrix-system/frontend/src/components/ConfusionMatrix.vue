@@ -369,11 +369,12 @@ const props = defineProps({
 
   /**
    * 最小值过滤阈值
+   * 默认-1，包含0值
    * 只显示大于此值的分类
    */
   minValueFilter: {
     type: Number,
-    default: 0
+    default: -1
   },
 
   /**

@@ -111,28 +111,28 @@ export const calculateMatrixMax = (detailList) => {
 
 /**
  * 【核心函数2】过滤详情数据
- * 
+ *
  * 过滤掉无效数据，只保留有效的记录
- * 
+ *
  * 【过滤条件】
  * 1. acturalValue 必须能转换为有效整数
  * 2. predictedValue 必须能转换为有效整数
  * 3. 两个值都必须大于 minValueFilter
- * 
+ *
  * 【示例】
  * 输入: [
  *   { acturalValue: "1", predictedValue: "2" },  // 有效
  *   { acturalValue: "abc", predictedValue: "1" }, // 无效：acturalValue不是数字
- *   { acturalValue: "0", predictedValue: "1" },   // 无效：acturalValue=0 不大于 minValueFilter=0
+ *   { acturalValue: "-1", predictedValue: "1" },  // 无效：acturalValue=-1 不大于 minValueFilter=-1
  * ]
- * minValueFilter: 0
+ * minValueFilter: -1 (默认值，包含0)
  * 输出: [{ acturalValue: "1", predictedValue: "2" }]
- * 
+ *
  * @param {Array} detailList - 详情数据列表
- * @param {number} minValueFilter - 最小值过滤阈值（默认0）
+ * @param {number} minValueFilter - 最小值过滤阈值（默认-1，包含0值）
  * @returns {Array} 过滤后的有效数据列表
  */
-export const filterDetailList = (detailList, minValueFilter = 0) => {
+export const filterDetailList = (detailList, minValueFilter = -1) => {
   log('开始过滤数据...')
   log('过滤前数量:', detailList.length)
   log('最小值过滤阈值:', minValueFilter)
@@ -174,23 +174,23 @@ export const filterDetailList = (detailList, minValueFilter = 0) => {
 
 /**
  * 【核心函数3】获取显示值列表
- * 
+ *
  * 根据策略确定矩阵的行/列标题值列表
- * 
+ *
  * 【策略说明】
  * - 策略1（完整矩阵）：生成从 minValueFilter+1 到 matrixMax 的连续整数
- *   例如：minValueFilter=0, matrixMax=5 → [1, 2, 3, 4, 5]
- * 
+ *   例如：minValueFilter=-1, matrixMax=5 → [0, 1, 2, 3, 4, 5]
+ *
  * - 策略2（稀疏矩阵）：只包含数据中实际出现过的值
- *   例如：数据中出现 1, 3, 5 → [1, 3, 5]（跳过 2, 4）
- * 
+ *   例如：数据中出现 0, 1, 3, 5 → [0, 1, 3, 5]（跳过 2, 4）
+ *
  * @param {Array} filteredList - 过滤后的数据列表
  * @param {number} matrixMax - 矩阵最大值
  * @param {string} matrixStrategy - 矩阵策略 "1"=完整 "2"=稀疏
- * @param {number} minValueFilter - 最小值过滤阈值
+ * @param {number} minValueFilter - 最小值过滤阈值（默认-1，包含0值）
  * @returns {Array} 显示值列表
  */
-export const getDisplayValues = (filteredList, matrixMax, matrixStrategy, minValueFilter = 0) => {
+export const getDisplayValues = (filteredList, matrixMax, matrixStrategy, minValueFilter = -1) => {
   log('开始计算显示值列表...')
   log('策略:', matrixStrategy === '2' ? '稀疏矩阵' : '完整矩阵')
   log('最大值:', matrixMax)
@@ -521,15 +521,15 @@ export const getLabel = (value, markList = [], detailList = []) => {
 
 /**
  * 【便捷函数】一次性计算所有矩阵数据
- * 
+ *
  * 这是一个封装函数，调用上面的所有核心函数，返回完整的计算结果。
  * 适合直接使用，无需单独调用每个函数。
- * 
+ *
  * @param {Object} options - 配置选项
  * @param {Array} options.detailList - 详情数据列表
  * @param {Array} options.markList - 标记映射列表（可选）
  * @param {string} options.matrixStrategy - 矩阵策略 "1"/"2"（默认"1"）
- * @param {number} options.minValueFilter - 最小值过滤阈值（默认0）
+ * @param {number} options.minValueFilter - 最小值过滤阈值（默认-1，包含0值）
  * @param {boolean} options.debug - 是否开启调试日志（默认false）
  * @returns {Object} 完整的计算结果
  */
@@ -538,7 +538,7 @@ export const computeMatrix = (options) => {
     detailList = [],
     markList = [],
     matrixStrategy = '1',
-    minValueFilter = 0,
+    minValueFilter = -1,
     debug = false
   } = options
   

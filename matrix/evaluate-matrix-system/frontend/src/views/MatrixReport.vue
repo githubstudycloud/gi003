@@ -114,7 +114,7 @@
               :mark-list="caseData.markList"
               :statistics="caseData.statistics"
               :matrix-strategy="matrixStrategyMap[caseData.caseConfig.caseId] || caseData.caseConfig.matrixStrategy || '1'"
-              :min-value-filter="caseData.caseConfig.minValueFilter || 0"
+              :min-value-filter="caseData.caseConfig.minValueFilter ?? -1"
               :axis-label="caseData.caseConfig.axisLabel || ''"
               @cell-click="handleCellClick"
             />

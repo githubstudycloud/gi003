@@ -43,9 +43,10 @@ const CORPUS_PREFIXES = ['QA', 'NLU', 'INT', 'TXT', 'USR']
 
 /**
  * 默认最小值过滤阈值
- * 稀疏矩阵模式下，只显示大于此值的分类
+ * 设为-1使所有矩阵默认包含0值
+ * 稀疏矩阵模式下，只显示数据中实际出现的分类
  */
-export const DEFAULT_MIN_VALUE_FILTER = 0
+export const DEFAULT_MIN_VALUE_FILTER = -1
 
 // ==================== 工具函数 ====================
 

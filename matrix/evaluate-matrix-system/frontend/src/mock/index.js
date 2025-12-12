@@ -296,11 +296,11 @@ export const mockScenarios = [
     }
   },
 
-  // ==================== 包含0值场景（新增） ====================
+  // ==================== 包含0值场景（验证默认行为） ====================
   {
     id: 'RPT011',
     name: '包含0值场景',
-    desc: '包含值为0的分类，测试总召回率和总精准率排除逻辑',
+    desc: '验证默认包含0值的矩阵显示和总召回率/总精准率排除逻辑',
     config: {
       reportId: 'RPT011',
       taskId: 'TASK011',
@@ -311,7 +311,7 @@ export const mockScenarios = [
           maxValue: 5,
           correctRate: 75,
           matrixStrategy: '1',
-          minValueFilter: -1,  // 设为-1以包含0值
+          // minValueFilter 默认为-1，自动包含0值
           validValues: [0, 1, 2, 3, 4, 5]  // 包含0
         }
       ]
